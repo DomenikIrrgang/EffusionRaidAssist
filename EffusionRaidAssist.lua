@@ -2,6 +2,7 @@ EffusionRaidAssist = LibStub("AceAddon-3.0"):NewAddon("EffusionRaidAssist", "Ace
 
 function EffusionRaidAssist:HandleCombatLogEvent()
     local timestamp, eventName, _, _, sourceName, _, _, _, _, _, _, _, spellName = CombatLogGetCurrentEventInfo()
+    print(CombatLogGetCurrentEventInfo())
     if (eventName == "SPELL_CAST_SUCCESS" and EffusionRaidAssist:ArrayContainsValue(EffusionRaidAssist.trackedSpells, spellName)) then
         if EffusionRaidAssist:GetCurrentRaid()[sourceName].spellUsage[spellName] ~= nil then
             table.insert(EffusionRaidAssist:GetCurrentRaid()[sourceName].spellUsage[spellName], timestamp)
@@ -28,6 +29,7 @@ EffusionRaidAssist.trackedSpells = {
     "Fire Protection",
     "Nature Protection",
     "Frost Protection",
+    "Free Action",
     "Flash of Light"
 }
 
