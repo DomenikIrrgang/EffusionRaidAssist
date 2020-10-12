@@ -5,3 +5,4 @@
 
 libs.xml
 EffusionRaidAssist.lua
+util.lua
