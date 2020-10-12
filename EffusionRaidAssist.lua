@@ -1,20 +1,16 @@
 EffusionRaidAssist = LibStub("AceAddon-3.0"):NewAddon("EffusionRaidAssist", "AceConsole-3.0")
 
-
-
 function EffusionRaidAssist:HandleCombatLogEvent()
     local timestamp, eventName, _, _, sourceName, _, _, _, _, _, _, _, spellName = CombatLogGetCurrentEventInfo()
     if (eventName == "SPELL_CAST_SUCCESS" and EffusionRaidAssist:ArrayContainsValue(EffusionRaidAssist.trackedSpells, spellName)) then
         if EffusionRaidAssist:GetCurrentRaid()[sourceName].spellUsage[spellName] ~= nil then
-            table.insert(EffusionRaidAssist:GetCurrentRaid()[sourceName].spellUsage[spellName], timestamp)        
+            table.insert(EffusionRaidAssist:GetCurrentRaid()[sourceName].spellUsage[spellName], timestamp)
         else
             EffusionRaidAssist:GetCurrentRaid()[sourceName].spellUsage[spellName] = { timestamp }
         end
         print(table.getn(EffusionRaidAssist:GetCurrentRaid()[sourceName].spellUsage[spellName]))
     end    
 end
-
-
 
 function EffusionRaidAssist:OnInitialize()
     print("EffusionRaidAsssist inititalized")
@@ -28,14 +24,16 @@ end
 
 EffusionRaidAssist.trackedSpells = {
     "Healing Potion",
+    "Mana Potion",
+    "Fire Protection",
+    "Nature Protection",
+    "Frost Protection",
     "Flash of Light"
 }
 
 EffusionRaidAssist.raidInfo = {
     Acurielle = {}
     --Raids--> Acurielle --> spellsUsed/Enchants --> real spell/concrete enchants
-
-
 }
 
 function EffusionRaidAssist:GetCurrentRaid()
