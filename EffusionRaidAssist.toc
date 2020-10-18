@@ -4,5 +4,8 @@
 ## Author: Gamko
 
 libs.xml
-EffusionRaidAssist.lua
-util.lua
+src/Util.lua
+src/Module.lua
+src/ModuleManager.lua
+src/EffusionRaidAssist.lua
+src/SpellTracker.lua
