@@ -21,12 +21,9 @@ function MinimapIcon.GetToolTip(tooltip)
 end
 
 function MinimapIcon:SetVisible(visible)
-    print(self:IsEnabled(), self.ldbName)
     if ((visible or nil) and self:IsEnabled()) then
-        print("show")
         self.icon:Show(self.ldbName)
     else
-        print("hide")
         self.icon:Hide(self.ldbName)
     end
 end
