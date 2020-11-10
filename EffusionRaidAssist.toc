@@ -1,11 +1,18 @@
 ## Interface: 11305
 ## Title: EffusionRaidAssist
 ## Version: 0.1
-## Author: Gamko
+## Author: Suu, Gamko
+## SavedVariables: EffusionRaidAssistDB
 
 libs.xml
 src/Util.lua
+src/EventDispatcher.lua
 src/Module.lua
 src/ModuleManager.lua
+src/DungeonManager.lua
+src/Options.lua
+src/Storage.lua
 src/EffusionRaidAssist.lua
+src/CustomEvents.lua
+src/MinimapIcon.lua
 src/SpellTracker.lua
