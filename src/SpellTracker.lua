@@ -3,10 +3,10 @@ SpellTracker = EffusionRaidAssist.ModuleManager:NewModule("SpellTracker")
 SpellTracker.trackedSpells = {
     "Healing Potion",
     "Mana Potion",
-    "Fire Protection ",
+    "Fire Protection",
     "Nature Protection ",
-    "Frost Protection ",
-    "Arcane Protection ",
+    "Frost Protection",
+    "Arcane Protection",
     "Free Action",
     "Goblin Sapper Charge",
     "Rage Potion",
@@ -16,7 +16,8 @@ SpellTracker.trackedSpells = {
     "Powerful Anti-Venom",
     "Jungle Remedy",
     "Restorative Potion",
-    "Strong Anti-Venom"
+    "Strong Anti-Venom",
+    "Flash of Light"
 }
 
 function SpellTracker:COMBAT_LOG_EVENT_UNFILTERED()
@@ -37,12 +38,10 @@ end
 
 function SpellTracker:OnModuleInitialize()
     self:GetData().spellUsage = self:GetData().spellUsage or {}
-    for index, player in pairs(EffusionRaidAssist:GetCurrentRaid()) do
-        EffusionRaidAssist:GetCurrentRaid()[index].spellUsage = {}
-    end
 end
 
 function SpellTracker:PrintData()
+    EffusionRaidAssist:ChatMessage("Spellusage:")
     for player, data in pairs(self:GetData().spellUsage) do
         EffusionRaidAssist:ChatMessage("Player: ", player)
         for spell, counter in pairs(data) do
