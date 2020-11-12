@@ -100,7 +100,7 @@ end
 function EffusionRaidAssistEventDispatcher:DispatchEvent(event, ...)
     if self.listener[event] ~= nil then
         for key, listener in pairs(self.listener[event]) do
-            if (listener["enabled"] == nil or (listener["enabled"] ~= nil and listener:IsEnabled()) and listener[event] ~= nil) then
+            if (listener["IsEnabled"] == nil or (listener["IsEnabled"] ~= nil and listener:IsEnabled()) and listener[event] ~= nil) then
                 listener[event](listener, ...)
             end
         end
