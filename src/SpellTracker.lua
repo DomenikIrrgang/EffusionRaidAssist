@@ -1,12 +1,12 @@
-local SpellTracker = EffusionRaidAssist.ModuleManager:NewModule("SpellTracker")
+SpellTracker = EffusionRaidAssist.ModuleManager:NewModule("SpellTracker")
 
 SpellTracker.trackedSpells = {
     "Healing Potion",
     "Mana Potion",
-    "Fire Protection",
-    "Nature Protection",
-    "Frost Protection",
-    "Arcane Protection",
+    "Fire Protection ",
+    "Nature Protection ",
+    "Frost Protection ",
+    "Arcane Protection ",
     "Free Action",
     "Goblin Sapper Charge",
     "Rage Potion",
@@ -21,9 +21,7 @@ SpellTracker.trackedSpells = {
 
 function SpellTracker:COMBAT_LOG_EVENT_UNFILTERED()
     local timestamp, eventName, _, _, sourceName, _, _, _, _, _, _, _, spellName = CombatLogGetCurrentEventInfo()
-    --print(eventName, sourceName, spellName, ArrayContainsValue(SpellTracker.trackedSpells, spellName))
     if (eventName == "SPELL_CAST_SUCCESS" and ArrayContainsValue(SpellTracker.trackedSpells, spellName)) then
-        --print("spell cast", sourceName, spellName)
         if self:GetData().spellUsage[sourceName] ~= nil then
             if (self:GetData().spellUsage[sourceName][spellName] ~= nil) then
                 table.insert(self:GetData().spellUsage[sourceName][spellName], timestamp)
