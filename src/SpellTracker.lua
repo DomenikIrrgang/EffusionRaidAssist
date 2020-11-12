@@ -16,8 +16,7 @@ SpellTracker.trackedSpells = {
     "Powerful Anti-Venom",
     "Jungle Remedy",
     "Restorative Potion",
-    "Strong Anti-Venom",
-    "Flash of Light"
+    "Strong Anti-Venom"
 }
 
 function SpellTracker:COMBAT_LOG_EVENT_UNFILTERED()
