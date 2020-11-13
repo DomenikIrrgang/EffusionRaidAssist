@@ -7,6 +7,7 @@
 libs.xml
 src/Util.lua
 src/EventDispatcher.lua
+src/CombatLogEventDispatcher.lua
 src/Module.lua
 src/ModuleManager.lua
 src/DungeonManager.lua

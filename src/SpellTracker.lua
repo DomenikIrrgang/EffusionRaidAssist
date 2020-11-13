@@ -2,7 +2,7 @@ SpellTracker = EffusionRaidAssist.ModuleManager:NewModule("SpellTracker")
 
 SpellTracker.trackedSpells = {
     "Healing Potion",
-    "Mana Potion",
+    "Restore Mana", -- maybe works now
     "Fire Protection",
     "Nature Protection ",
     "Frost Protection",
@@ -11,7 +11,8 @@ SpellTracker.trackedSpells = {
     "Goblin Sapper Charge",
     "Rage Potion",
     "Stoneshield",
-    "Healthstone",
+    "Greater Healthstone",
+    "Major Healthstone",
     "Anti-Venom",
     "Powerful Anti-Venom",
     "Jungle Remedy",
@@ -19,24 +20,24 @@ SpellTracker.trackedSpells = {
     "Strong Anti-Venom"
 }
 
-function SpellTracker:COMBAT_LOG_EVENT_UNFILTERED()
-    local timestamp, eventName, _, _, sourceName, _, _, _, _, _, _, _, spellName = CombatLogGetCurrentEventInfo()
-    if (eventName == "SPELL_CAST_SUCCESS" and ArrayContainsValue(SpellTracker.trackedSpells, spellName)) then
-        if self:GetData().spellUsage[sourceName] ~= nil then
-            if (self:GetData().spellUsage[sourceName][spellName] ~= nil) then
-                table.insert(self:GetData().spellUsage[sourceName][spellName], timestamp)
+function SpellTracker:SpellCastSuccess(event)
+    if (ArrayContainsValue(SpellTracker.trackedSpells, event.spellName)) then
+        if self:GetData().spellUsage[event.sourceName] ~= nil then
+            if (self:GetData().spellUsage[event.sourceName][event.spellName] ~= nil) then
+                table.insert(self:GetData().spellUsage[event.sourceName][event.spellName], event.timestamp)
             else
-                self:GetData().spellUsage[sourceName][spellName] = { timestamp }
+                self:GetData().spellUsage[event.sourceName][event.spellName] = { event.timestamp }
             end
         else
-            self:GetData().spellUsage[sourceName] = {}
-            self:GetData().spellUsage[sourceName][spellName] = { timestamp }
+            self:GetData().spellUsage[event.sourceName] = {}
+            self:GetData().spellUsage[event.sourceName][event.spellName] = { event.timestamp }
         end
     end
 end
 
 function SpellTracker:OnModuleInitialize()
     self:GetData().spellUsage = self:GetData().spellUsage or {}
+    self:CombatLogEvent("SPELL_CAST_SUCCESS", nil, self.SpellCastSuccess)
 end
 
 function SpellTracker:PrintData()
@@ -49,14 +50,19 @@ function SpellTracker:PrintData()
     end
 end
 
-function SpellTracker:ResetData()
-    self:GetData().spellUsage = {}
+function SpellTracker:PrintNothingUsed()
+    for i = 1, GetNumGroupMembers() do
+        local player = GetRaidRosterInfo(i);
+        local data = self:GetData().spellUsage[player]
+        if (data == nil) then
+            EffusionRaidAssist:ChatMessage("Player: ", player)
+            EffusionRaidAssist:ChatMessage("  Nothing used.")
+        end
+    end
 end
 
-function SpellTracker:GetGameEvents()
-    return {
-        "COMBAT_LOG_EVENT_UNFILTERED"
-    }
+function SpellTracker:ResetData()
+    self:GetData().spellUsage = {}
 end
 
 function SpellTracker:GetOptions()
@@ -70,8 +76,17 @@ function SpellTracker:GetOptions()
             width = "full",
             handler = self
         },
+        nothing = {
+            order = 3,
+            name = "Print Nothing used",
+            desc = "Print the names of players that didnt use anything.",
+            type = "execute",
+            func = "PrintNothingUsed",
+            width = "full",
+            handler = self
+        },
         reset = {
-            order = 2,
+            order = 4,
             name = "Reset Data",
             desc = "Reset all gathered data.",
             type = "execute",

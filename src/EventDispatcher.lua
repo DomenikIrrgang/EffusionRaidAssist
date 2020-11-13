@@ -1,11 +1,4 @@
-EffusionRaidAssistEventDispatcher = {}
-EffusionRaidAssistEventDispatcher.__index = EffusionRaidAssistEventDispatcher
-
-setmetatable(EffusionRaidAssistEventDispatcher, {
-    __call = function (cls, ...)
-        return cls.new(...)
-    end,
-})
+EffusionRaidAssistEventDispatcher = CreateClass()
 
 --[[
     Creates a new Eventdispatcher.

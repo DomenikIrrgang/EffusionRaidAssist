@@ -1,6 +1,7 @@
 EffusionRaidAssist = LibStub("AceAddon-3.0"):NewAddon("EffusionRaidAssist", "AceConsole-3.0")
 
 EffusionRaidAssist.EventDispatcher = EffusionRaidAssistEventDispatcher()
+EffusionRaidAssist.CombatLogEventDispatcher = EffusionRaidAssistCombatLogEventDispatcher()
 EffusionRaidAssist.ModuleManager = EffusionRaidAssistModuleManager()
 EffusionRaidAssist.DungeonManager = EffusionRaidAssistDungeonManager()
 EffusionRaidAssist.Options = EffusionRaidAssistOptions()
@@ -15,15 +16,6 @@ end
 function EffusionRaidAssist:ChatMessage(...)
     print("|c0000FF00EffusionRaidAssist|r: ", ...)
 end
-
-function EffusionRaidAssist:GetCurrentRaid()
-    return self.raidInfo
-end
-
-EffusionRaidAssist.raidInfo = {
-    Suupriest = {}
-    --Raids--> Acurielle --> spellsUsed/Enchants --> real spell/concrete enchants
-}
 
 EffusionRaidAssist.MetaData = {
     Version = "0.1"

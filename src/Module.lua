@@ -14,6 +14,10 @@ function EffusionRaidAssistModule:OnInitialize()
     self:SetEnabled(self:IsEnabled())
 end
 
+function EffusionRaidAssistModule:CombatLogEvent(event, spellName, callback)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback(event, spellName, self, callback)
+end
+
 function EffusionRaidAssistModule:SetEnabled(enabled)
     if (self:IsEnabled()) then
         if (self.OnEnable) then
