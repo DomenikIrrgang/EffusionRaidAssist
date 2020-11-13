@@ -17,7 +17,9 @@ SpellTracker.trackedSpells = {
     "Powerful Anti-Venom",
     "Jungle Remedy",
     "Restorative Potion",
-    "Strong Anti-Venom"
+    "Strong Anti-Venom",
+    "Dispel Poison",
+    "Cure Ailments"
 }
 
 function SpellTracker:SpellCastSuccess(event)
