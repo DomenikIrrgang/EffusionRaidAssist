@@ -29,7 +29,7 @@ function MinimapIcon:SetVisible(visible)
 end
 
 function MinimapIcon.Click(...)
-    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.MinimapIconClick, ...)
+    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.MinimapIconClicked, ...)
 end
 
 function MinimapIcon:PROFILE_CHANGED()

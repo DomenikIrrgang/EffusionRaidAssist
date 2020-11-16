@@ -16,4 +16,5 @@ src/Storage.lua
 src/EffusionRaidAssist.lua
 src/CustomEvents.lua
 src/MinimapIcon.lua
+src/MainWindow.lua
 src/SpellTracker.lua

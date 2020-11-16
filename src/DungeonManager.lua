@@ -6,6 +6,7 @@ EffusionRaidAssistDungeonManager = CreateClass()
 function EffusionRaidAssistDungeonManager.new()
     local self = setmetatable({}, EffusionRaidAssistDungeonManager)
     self.currentDungeon = nil
+    self.activeEncounters = {}
     EffusionRaidAssist.EventDispatcher:AddEventListener(self)
     return self
 end
@@ -15,7 +16,9 @@ end
 --]]
 function EffusionRaidAssistDungeonManager:GetGameEvents()
     return {
-        "PLAYER_ENTERING_WORLD"
+        "PLAYER_ENTERING_WORLD",
+        "ENCOUNTER_START",
+        "ENCOUNTER_END"
     }
 end
 
@@ -31,6 +34,38 @@ function EffusionRaidAssistDungeonManager:PLAYER_ENTERING_WORLD()
         EffusionRaidAssist.EventDispatcher:DispatchEvent("DUNGEON_LEFT", self.currentDungeon)
         self.currentDungeon = nil
     end
+end
+
+--[[
+    Stores information about the boss encounters that started.
+--]]
+function EffusionRaidAssistDungeonManager:ENCOUNTER_START(id, name, difficulty, size)
+    self.activeEncounters[id] = { id = id, name = name, start = GetTime(), difficulty = difficulty }
+end
+
+--[[
+    Removes information about the boss encounters that ended.
+--]]
+function EffusionRaidAssistDungeonManager:ENCOUNTER_END(id, name, difficulty, size)
+    self.activeEncounters[id] = nil
+end
+
+--[[
+    Returns true if the player is currently in a boss encounter.
+
+    @return true if player is currently engaged in a boss encounter.
+--]]
+function EffusionRaidAssistDungeonManager:IsEncounterActive()
+    return table.getn(self.IsEncounterActive) > 0
+end
+
+--[[
+    Returns information about the currently engaged boss encounters.
+
+    @return Table that contains information about the currently engaged boss encounters.
+--]]
+function EffusionRaidAssistDungeonManager:GetActiveEncounters()
+    return self.activeEncounters
 end
 
 --[[
