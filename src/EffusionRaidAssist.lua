@@ -4,6 +4,7 @@ EffusionRaidAssist.EventDispatcher = EffusionRaidAssistEventDispatcher()
 EffusionRaidAssist.CombatLogEventDispatcher = EffusionRaidAssistCombatLogEventDispatcher()
 EffusionRaidAssist.ModuleManager = EffusionRaidAssistModuleManager()
 EffusionRaidAssist.DungeonManager = EffusionRaidAssistDungeonManager()
+EffusionRaidAssist.EncounterManager = EffusionRaidAssistEncounterManager()
 EffusionRaidAssist.Options = EffusionRaidAssistOptions()
 EffusionRaidAssist.Storage = EffusionRaidAssistDataStorage()
 

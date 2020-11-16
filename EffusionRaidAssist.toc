@@ -6,11 +6,13 @@
 
 libs.xml
 src/Util.lua
+src/Encounter.lua
 src/EventDispatcher.lua
 src/CombatLogEventDispatcher.lua
 src/Module.lua
 src/ModuleManager.lua
 src/DungeonManager.lua
+src/EncounterManager.lua
 src/Options.lua
 src/Storage.lua
 src/EffusionRaidAssist.lua

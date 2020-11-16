@@ -64,6 +64,7 @@
         "CombatLogGetCurrentEventInfo",
         "GetInstanceInfo",
         "GetNumGroupMembers",
-        "GetRaidRosterInfo"
+        "GetRaidRosterInfo",
+        "GetTime"
     ]
 }

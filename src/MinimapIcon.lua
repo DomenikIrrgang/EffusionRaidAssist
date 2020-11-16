@@ -17,7 +17,6 @@ function MinimapIcon.GetToolTip(tooltip)
     if not tooltip or not tooltip.AddLine then return end
     tooltip:AddLine("EffusionRaidAssist")
     tooltip:AddLine("Version " .. EffusionRaidAssist.MetaData.Version)
-
 end
 
 function MinimapIcon:SetVisible(visible)

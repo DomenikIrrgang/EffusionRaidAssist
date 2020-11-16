@@ -2,7 +2,7 @@ SpellTracker = EffusionRaidAssist.ModuleManager:NewModule("SpellTracker")
 
 SpellTracker.trackedSpells = {
     "Healing Potion",
-    "Restore Mana", -- maybe works now
+    "Restore Mana",
     "Fire Protection",
     "Nature Protection ",
     "Frost Protection",

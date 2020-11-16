@@ -9,4 +9,6 @@ EffusionRaidAssist.CustomEvents = {
     ProfileChanged = "PROFILE_CHANGED", -- ()
     ModuleEnabled = "MODULE_ENABLED", -- (name)
     ModuleDisabled = "MODULE_DISABLED", -- (name)
+    EncounterEngaged = "ENCOUNTER_ENGAGED", -- (encounterInformation)
+    EncounterEnded = "ENCOUNTER_ENDED", -- (encounterInformation)
 }
