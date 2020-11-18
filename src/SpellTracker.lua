@@ -20,7 +20,12 @@ SpellTracker.trackedSpells = {
     "Restorative Potion",
     "Strong Anti-Venom",
     "Dispel Poison",
-    "Cure Ailments"
+    "Cure Ailments",
+    "Elixir of the Giants",
+    "Greater Armor",
+    "Elixir of the Mongoose",
+    "Health II",
+    "Greater Agility"
 }
 
 function SpellTracker:SpellCastSuccess(event)

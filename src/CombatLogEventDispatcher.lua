@@ -59,7 +59,6 @@ function EffusionRaidAssistCombatLogEventDispatcher:COMBAT_LOG_EVENT_UNFILTERED(
     combatLogEvent.spellId = spellId
     combatLogEvent.spellName = spellName
     combatLogEvent.spellSchool = spellSchool
-
     if (event == "SPELL_INTERRUPT") then
         combatLogEvent.interuptedSpellId = auraType
         combatLogEvent.interuptedSpellName = amount

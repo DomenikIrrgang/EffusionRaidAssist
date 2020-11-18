@@ -87,10 +87,20 @@ function MainWindow:MODULE_DISABLED(moduleName)
     end
 end
 
+function MainWindow:PROFILE_CHANGED()
+    self:UpdateDropdownList()
+    if (table.getn(self:GetModulesWithUserinterface()) > 0) then
+        self.moduleSelection:SetGroup(self:GetModulesWithUserinterface()[1].name)
+    else
+        self.moduleSelection:SetGroup(nil)
+    end
+end
+
 function MainWindow:GetCustomEvents()
     return {
         "MINIMAP_ICON_CLICKED",
         "MODULE_ENABLED",
-        "MODULE_DISABLED"
+        "MODULE_DISABLED",
+        "PROFILE_CHANGED"
     }
 end
