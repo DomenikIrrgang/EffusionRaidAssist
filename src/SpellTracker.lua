@@ -70,7 +70,26 @@ end
 
 function SpellTracker:CreateUserinterface()
     local content = AceGUI:Create("SimpleGroup")
-    content:AddChild(AceGUI:Create("Button"))
+    content:SetLayout("Fill")
+    local results = AceGUI:Create("ScrollFrame")
+    results:SetLayout("List")
+    content:AddChild(results)
+    for player, data in pairs(self:GetData().spellUsage) do
+        local label = AceGUI:Create("Label")
+        label:SetText(player)
+        results:AddChild(label)
+        local seperator = AceGUI:Create("Label")
+        seperator:SetText("---------------------------")
+        results:AddChild(seperator)
+        for spellName, casts in pairs(data) do
+            local spell = AceGUI:Create("Label")
+            spell:SetText(spellName .. " " .. table.getn(casts))
+            results:AddChild(spell)
+        end
+        local seperator2 = AceGUI:Create("Label")
+        seperator2:SetText(" ")
+        results:AddChild(seperator2)
+    end
     return content
 end
 
