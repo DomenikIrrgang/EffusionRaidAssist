@@ -1,4 +1,5 @@
 SpellTracker = EffusionRaidAssist.ModuleManager:NewModule("SpellTracker")
+local AceGUI = LibStub("AceGUI-3.0")
 
 SpellTracker.trackedSpells = {
     "Healing Potion",
@@ -65,6 +66,12 @@ end
 
 function SpellTracker:ResetData()
     self:GetData().spellUsage = {}
+end
+
+function SpellTracker:CreateUserinterface()
+    local content = AceGUI:Create("SimpleGroup")
+    content:AddChild(AceGUI:Create("Button"))
+    return content
 end
 
 function SpellTracker:GetOptions()

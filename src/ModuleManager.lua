@@ -11,6 +11,25 @@ function EffusionRaidAssistModuleManager:GetModules()
     return self.modules
 end
 
+function EffusionRaidAssistModuleManager:GetEnabledModules()
+    local result = {}
+    for _, module in pairs(self:GetModules()) do
+        if (module:IsEnabled()) then
+            table.insert(result, module)
+        end
+    end
+    return result
+end
+
+function EffusionRaidAssistModuleManager:GetModuleByName(moduleName)
+    for _, module in pairs(self:GetModules()) do
+        if module.name == moduleName then
+            return module
+        end
+    end
+    return nil
+end
+
 function EffusionRaidAssistModuleManager:GetCustomEvents()
     return {
         "EFFUSION_RAID_ASSIST_INIT_FINISHED"

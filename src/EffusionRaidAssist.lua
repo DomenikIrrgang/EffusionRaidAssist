@@ -19,5 +19,7 @@ function EffusionRaidAssist:ChatMessage(...)
 end
 
 EffusionRaidAssist.MetaData = {
-    Version = "0.1"
+    Version = "0.1",
+    Date = "11/17/2020",
+    Authors = "Suu, Gamko"
 }
