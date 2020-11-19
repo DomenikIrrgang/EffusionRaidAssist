@@ -7,6 +7,23 @@ function ArrayContainsValue(array, value)
     return false
 end
 
+function ArrayContainsKey(array, value)
+    for index, arrayValue in ipairs(array) do
+        if index == value then
+            return true
+        end
+    end 
+    return false
+end
+
+function CreateTableWithKeysAsValues(table)
+    local result = {}
+    for key in pairs(table) do
+        result[key] = key
+    end
+    return result
+end
+
 function CreateClass()
     local newClass = {}
     newClass.__index = newClass
@@ -30,6 +47,14 @@ function table.merge(table1, table2)
     local result = table.copy(table1)
     for k,v in pairs(table2) do
         result[k] = v
+    end
+    return result
+end
+
+function table.add(table1, table2)
+    local result = table.copy(table1)
+    for _, value in pairs(table2) do
+        table.insert(result, value)
     end
     return result
 end

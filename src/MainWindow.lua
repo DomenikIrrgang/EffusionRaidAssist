@@ -3,13 +3,15 @@ local AceGUI = LibStub("AceGUI-3.0")
 
 function MainWindow:OnModuleInitialize()
     self.window, self.moduleSelection, self.content = self:CreateWindow("EffusionRaidAssist")
+    _G["EffusionRaidAssistMainWindow"] = self.window.frame
+    table.insert(UISpecialFrames, "EffusionRaidAssistMainWindow")
     if (table.getn(self:GetModulesWithUserinterface()) > 0) then
         self.moduleSelection:SetGroup(self:GetModulesWithUserinterface()[1].name)
     end
 end
 
 function MainWindow:CreateWindow(title)
-    local window = AceGUI:Create("Frame")
+    local window = AceGUI:Create("Frame") 
     window:SetHeight(900 / 1.4)
     window:SetWidth(1600 / 1.4)
     window:SetLayout("Fill")
