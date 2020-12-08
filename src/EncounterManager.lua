@@ -23,7 +23,7 @@ end
     Stores information about the boss encounters that started.
 --]]
 function EffusionRaidAssistEncounterManager:ENCOUNTER_START(id, name, difficulty, size)
-    self:EngageEncounter(id, name, difficulty, size)
+    self:StartEncounter(id, name, difficulty, size)
 end
 
 --[[
@@ -36,6 +36,7 @@ end
 function EffusionRaidAssistEncounterManager:StartEncounter(id, name, difficulty, size)
     local encounter = EffusionRaidAssistEncounter(id, name, difficulty, size)
     self.activeEncounters[id] = encounter
+    print(id, name, difficulty, size)
     EffusionRaidAssist:ChatMessage(encounter.name, "(" .. encounter:GetDifficultyName() .. ", " .. encounter.size .. "-man) engaged! Good luck.")
 end
 

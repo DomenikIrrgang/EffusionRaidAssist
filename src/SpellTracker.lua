@@ -27,14 +27,14 @@ SpellTracker.trackedSpells = {
     ["Health II"] = { id = 3825 },
     ["Greater Agility"] = { id = 9187 },
     ["Juju Power"] = { id = 12451 },
-    ["Mageblood Potion"] = { id = 20007 },
+    ["Mana Regeneration"] = { id = 20007, displayName = "Mageblood Potion" },
     ["Elixir of Greater Firepower"] = { id = 21546 },
     ["Greater Arcane Elixir"] = { id = 13454 },
     ["Elixir of Shadow Power"] = { id = 11476 },
     ["Winterfall Firewater"] = { id = 12820 },
     ["Restory Energy"] = { id = 7676 },
     ["Stratholme Holy Water"] = { id = 13180 },
-    ["Major Troll's Blood Potion"] = { id = 20004 },
+    ["Regeneration"] = { id = 20004, displayName = "Major Troll's Blood Potion" },
     ["Whipper Root Tuber"] = { id = 11951 },
 }
 
@@ -98,7 +98,7 @@ function SpellTracker:CreateUserinterface()
     results:SetFullWidth(true)
     results:SetFullHeight(true)
     scrollContainer:AddChild(results)
-    for player, data in pairs(self:GetData().spellUsage) do
+    for player, data in pairs(self:GetData().spellUsage or {}) do
         local playerContainer = AceGUI:Create("InlineGroup")
         results:AddChild(playerContainer)
         local label = AceGUI:Create("InteractiveLabel")
