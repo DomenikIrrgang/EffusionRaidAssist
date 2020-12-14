@@ -65,6 +65,12 @@
         "GetInstanceInfo",
         "GetNumGroupMembers",
         "GetRaidRosterInfo",
-        "GetTime"
+        "GetTime",
+        "max",
+        "min",
+        "ceil",
+        "BackdropTemplateMixin",
+        "debugstack",
+        "UISpecialFrames"
     ]
 }
