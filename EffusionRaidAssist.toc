@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 90002
 ## Title: EffusionRaidAssist
 ## Version: 0.1
 ## Author: Suu, Gamko
@@ -6,17 +6,21 @@
 
 libs.xml
 src/Util.lua
+src/Stack.lua
+src/FramePool.lua
 src/Encounter.lua
 src/EventDispatcher.lua
+src/CombatLogEvent.lua
 src/CombatLogEventDispatcher.lua
 src/Module.lua
 src/ModuleManager.lua
 src/DungeonManager.lua
 src/EncounterManager.lua
+src/CombatManager.lua
+src/GroupManager.lua
 src/Options.lua
 src/Storage.lua
 src/EffusionRaidAssist.lua
 src/CustomEvents.lua
 src/MinimapIcon.lua
 src/MainWindow.lua
-src/SpellTracker.lua

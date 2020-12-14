@@ -36,7 +36,6 @@ end
 function EffusionRaidAssistEncounterManager:StartEncounter(id, name, difficulty, size)
     local encounter = EffusionRaidAssistEncounter(id, name, difficulty, size)
     self.activeEncounters[id] = encounter
-    print(id, name, difficulty, size)
     EffusionRaidAssist:ChatMessage(encounter.name, "(" .. encounter:GetDifficultyName() .. ", " .. encounter.size .. "-man) engaged! Good luck.")
 end
 

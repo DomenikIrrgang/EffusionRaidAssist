@@ -39,12 +39,21 @@ function EffusionRaidAssistEncounter:GetDuration()
 end
 
 --[[
+    Returns true if the encounter is on LFR difficutly.
+
+    @return True if encounter is LFR difficulty.
+--]]
+function EffusionRaidAssistEncounter:IsLFR()
+	return self:GetDifficultyName() == "LFR"
+end
+
+--[[
     Returns true if the encounter is on Mythic difficutly.
 
     @return True if encounter is Mythic difficulty.
 --]]
 function EffusionRaidAssistEncounter:IsMythic()
-	return self.difficulty == 16
+	return self:GetDifficultyName() == "Mythic"
 end
 
 --[[
@@ -53,7 +62,7 @@ end
     @return True if encounter is Heroic difficulty.
 --]]
 function EffusionRaidAssistEncounter:IsHeroic()
-	return self.difficulty == 15
+	return self:GetDifficultyName() == "Heroic"
 end
 
 --[[
@@ -62,7 +71,7 @@ end
     @return True if encounter is Normal difficulty.
 --]]
 function EffusionRaidAssistEncounter:IsNormal()
-	return self.difficulty == 14
+	return self:GetDifficultyName() == "Normal"
 end
 
 --[[
@@ -120,6 +129,22 @@ function EffusionRaidAssistEncounter:IsActive()
 end
 
 EffusionRaidAssistEncounter.difficultyMap = {}
+EffusionRaidAssistEncounter.difficultyMap[1] = "Normal"
+EffusionRaidAssistEncounter.difficultyMap[2] = "Heroic"
+EffusionRaidAssistEncounter.difficultyMap[3] = "Normal"
+EffusionRaidAssistEncounter.difficultyMap[4] = "Normal"
+EffusionRaidAssistEncounter.difficultyMap[5] = "Heroic"
+EffusionRaidAssistEncounter.difficultyMap[6] = "Heroic"
+EffusionRaidAssistEncounter.difficultyMap[7] = "LFR"
+EffusionRaidAssistEncounter.difficultyMap[8] = "Mythic"
+EffusionRaidAssistEncounter.difficultyMap[9] = "Normal"
+EffusionRaidAssistEncounter.difficultyMap[11] = "Heroic"
+EffusionRaidAssistEncounter.difficultyMap[12] = "Normal"
 EffusionRaidAssistEncounter.difficultyMap[14] = "Normal"
 EffusionRaidAssistEncounter.difficultyMap[15] = "Heroic"
 EffusionRaidAssistEncounter.difficultyMap[16] = "Mythic"
+EffusionRaidAssistEncounter.difficultyMap[17] = "LFR"
+EffusionRaidAssistEncounter.difficultyMap[148] = "Normal"
+EffusionRaidAssistEncounter.difficultyMap[150] = "Normal"
+
+

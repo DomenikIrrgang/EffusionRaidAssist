@@ -1,6 +1,6 @@
 EffusionRaidAssistModule = CreateClass()
 
-function EffusionRaidAssistModule.new(name)
+function EffusionRaidAssistModule.new(name, object)
     local self = setmetatable({}, EffusionRaidAssistModule)
     self.name = name
     return self

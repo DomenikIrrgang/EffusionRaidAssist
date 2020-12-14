@@ -1,6 +1,6 @@
-local MinimapIcon = EffusionRaidAssist.ModuleManager:NewModule("MinimapIcon")
+EffusionRaidAssistMinimapIcon = EffusionRaidAssistModule("Minimap")
 
-function MinimapIcon:OnModuleInitialize()
+function EffusionRaidAssistMinimapIcon:OnModuleInitialize()
     self.icon = LibStub("LibDBIcon-1.0")
     self.ldbName = "EffusionRaidAssist_LDB"
     self.ldb = LibStub("LibDataBroker-1.1"):NewDataObject(self.ldbName, {
@@ -10,16 +10,16 @@ function MinimapIcon:OnModuleInitialize()
         OnClick = self.Click,
         OnTooltipShow = self.GetToolTip,
     })
-    self.icon:Register("EffusionRaidAssist_LDB", self.ldb, { hide = MinimapIcon:GetData().hideMinimap == true or not self:IsEnabled() })
+    self.icon:Register("EffusionRaidAssist_LDB", self.ldb, { hide = self:GetData().hideMinimap == true or not self:IsEnabled() })
 end
 
-function MinimapIcon.GetToolTip(tooltip)
+function EffusionRaidAssistMinimapIcon.GetToolTip(tooltip)
     if not tooltip or not tooltip.AddLine then return end
     tooltip:AddLine("EffusionRaidAssist")
     tooltip:AddLine("Version " .. EffusionRaidAssist.MetaData.Version)
 end
 
-function MinimapIcon:SetVisible(visible)
+function EffusionRaidAssistMinimapIcon:SetVisible(visible)
     if ((visible or nil) and self:IsEnabled()) then
         self.icon:Show(self.ldbName)
     else
@@ -27,40 +27,40 @@ function MinimapIcon:SetVisible(visible)
     end
 end
 
-function MinimapIcon.Click(...)
+function EffusionRaidAssistMinimapIcon.Click(...)
     EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.MinimapIconClicked, ...)
 end
 
-function MinimapIcon:PROFILE_CHANGED()
-    self:SetVisible(MinimapIcon:GetData().hideMinimap == false or MinimapIcon:GetData().hideMinimap == nil)
+function EffusionRaidAssistMinimapIcon:PROFILE_CHANGED()
+    self:SetVisible(self:GetData().hideMinimap == false or self:GetData().hideMinimap == nil)
 end
 
-function MinimapIcon:OnEnable()
-    self:SetVisible(MinimapIcon:GetData().hideMinimap == false or MinimapIcon:GetData().hideMinimap == nil)
+function EffusionRaidAssistMinimapIcon:OnEnable()
+    self:SetVisible(self:GetData().hideMinimap == false or self:GetData().hideMinimap == nil)
 end
 
-function MinimapIcon:OnDisable()
+function EffusionRaidAssistMinimapIcon:OnDisable()
     self:SetVisible(false)
 end
 
-function MinimapIcon:GetOptions()
+function EffusionRaidAssistMinimapIcon:GetOptions()
     return {
         hide = {
             order = 1,
             type = "toggle",
             name = "Hide Minimapicon",
             get = function()
-                return MinimapIcon:GetData().hideMinimap
+                return self:GetData().hideMinimap
             end,
             set = function(_, value)
-                MinimapIcon:GetData().hideMinimap = value
-                MinimapIcon:SetVisible(MinimapIcon:GetData().hideMinimap == false)
+                self:GetData().hideMinimap = value
+                self:SetVisible(self:GetData().hideMinimap == false)
             end,
         }
     }
 end
 
-function MinimapIcon:GetCustomEvents()
+function EffusionRaidAssistMinimapIcon:GetCustomEvents()
     return {
         "PROFILE_CHANGED"
     }

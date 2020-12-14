@@ -3,7 +3,7 @@ EffusionRaidAssistModuleManager = CreateClass()
 function EffusionRaidAssistModuleManager.new()
     local self = setmetatable({}, EffusionRaidAssistModuleManager)
     self.modules = {}
-    EffusionRaidAssist.EventDispatcher:AddEventListener(self)
+    EffusionRaidAssist.EventDispatcher:AddEventCallback("EFFUSION_RAID_ASSIST_INIT_FINISHED", self, self.Init)
     return self
 end
 
@@ -30,13 +30,7 @@ function EffusionRaidAssistModuleManager:GetModuleByName(moduleName)
     return nil
 end
 
-function EffusionRaidAssistModuleManager:GetCustomEvents()
-    return {
-        "EFFUSION_RAID_ASSIST_INIT_FINISHED"
-    }
-end
-
-function EffusionRaidAssistModuleManager:EFFUSION_RAID_ASSIST_INIT_FINISHED()
+function EffusionRaidAssistModuleManager:Init()
     for _, module in pairs(self.modules) do
         if (module.OnInitialize ~= nil) then
             module:OnInitialize()
@@ -44,10 +38,14 @@ function EffusionRaidAssistModuleManager:EFFUSION_RAID_ASSIST_INIT_FINISHED()
     end
 end
 
-function EffusionRaidAssistModuleManager:NewModule(name)
-    local newModule = EffusionRaidAssistModule(name)
-    newModule.id = table.getn(self.modules)
-    table.insert(self.modules, newModule)
+function EffusionRaidAssistModuleManager:NewModule(name, object)
+    local newModule = EffusionRaidAssistModule(name, object)
+    self:AddModule(newModule)
     return newModule
+end
+
+function EffusionRaidAssistModuleManager:AddModule(module)
+    module.id = table.getn(self.modules)
+    table.insert(self.modules, module)
 end
 

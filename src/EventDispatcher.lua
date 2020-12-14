@@ -19,13 +19,14 @@ end
 --]]
 function EffusionRaidAssistEventDispatcher:Clear()
     self.listener = {}
-    for event, value in pairs(self.gameEvents) do
+    for event in pairs(self.gameEvents) do
         self.frame:UnregisterEvent(event)
     end
+    self.gameEvents = {}
 end
 
 --[[
-    Adds a new Eventlistener. Uses the getGameEvents() and getCustomEvents() function of the listener to get the events
+    Adds a new Eventlistener. Uses the GetGameEvents() and GetCustomEvents() function of the listener to get the events
     the listener wants to listen to.
 
     @param eventListener EventListener to be added.
@@ -36,20 +37,31 @@ function EffusionRaidAssistEventDispatcher:AddEventListener(eventListener)
 end
 
 --[[
-    Adds a new Eventlistener. Uses the getGameEvents() function of the listener to get the events
+    Adds a new event callback. Function is called like this: callback(listener, ...)
+
+    @param event Event the function shall be called for.
+    @param listener Object that will be passed to the function as self.
+    @param callback Function that will be called when the event offcurs.
+--]]
+function EffusionRaidAssistEventDispatcher:AddEventCallback(event, listener, callback)
+    self:AddEventIfNotExist(event)
+    if (self.listener[event] == nil) then
+        self.listener[event] = {}
+    end
+    table.insert(self.listener[event], { listener = listener, callback = callback })
+end
+
+--[[
+    Adds a new Eventlistener. Uses the GetGameEvents() function of the listener to get the events
     the listener wants to listen to.
 
     @param eventListener EventListener to be added.
 --]]
 function EffusionRaidAssistEventDispatcher:AddGameEventListener(eventListener)
     if (eventListener.GetGameEvents ~= nil) then
-        for key, event in pairs(eventListener:GetGameEvents()) do
-            self:AddEventIfNotExist(event)
-            if (self.listener[event] == nil) then
-                self.listener[event] = {}
-                self.gameEvents[event] = true
-            end
-            table.insert(self.listener[event], eventListener)
+        for _, event in pairs(eventListener:GetGameEvents()) do
+            self.gameEvents[event] = true
+            self:AddEventCallback(event, eventListener)
         end
     end
 end
@@ -62,11 +74,8 @@ end
 --]]
 function EffusionRaidAssistEventDispatcher:AddCustomEventListener(eventListener)
     if (eventListener.GetCustomEvents ~= nil) then
-        for key, event in pairs(eventListener:GetCustomEvents()) do
-            if (self.listener[event] == nil) then
-                self.listener[event] = {}
-            end
-            table.insert(self.listener[event], eventListener)
+        for _, event in pairs(eventListener:GetCustomEvents()) do
+            self:AddEventCallback(event, eventListener)
         end
     end
 end
@@ -77,7 +86,7 @@ end
     @param eventListener EventListener to be added.
 --]]
 function EffusionRaidAssistEventDispatcher:AddEventIfNotExist(event)
-    if (self.frame:IsEventRegistered(event) ~= nil) then
+    if (TableContainsValue(EffusionRaidAssist.CustomEvents, event) == false and self.frame:IsEventRegistered(event) ~= nil) then
         self.frame:RegisterEvent(event)
     end
 end
@@ -92,9 +101,16 @@ end
 --]]
 function EffusionRaidAssistEventDispatcher:DispatchEvent(event, ...)
     if self.listener[event] ~= nil then
-        for key, listener in pairs(self.listener[event]) do
-            if (listener["IsEnabled"] == nil or (listener["IsEnabled"] ~= nil and listener:IsEnabled()) and listener[event] ~= nil) then
-                listener[event](listener, ...)
+        for _, value in pairs(self.listener[event]) do
+            local listener = value.listener
+            if (listener["IsEnabled"] == nil or (listener["IsEnabled"] ~= nil and listener:IsEnabled())) then
+                if (value.callback ~= nil) then
+                    value.callback(listener, ...)
+                else
+                    if (listener[event] ~= nil) then
+                        listener[event](listener, ...)
+                    end
+                end
             end
         end
     end

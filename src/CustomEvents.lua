@@ -10,5 +10,9 @@ EffusionRaidAssist.CustomEvents = {
     ModuleEnabled = "MODULE_ENABLED", -- (name)
     ModuleDisabled = "MODULE_DISABLED", -- (name)
     EncounterEngaged = "ENCOUNTER_ENGAGED", -- (encounterInformation)
-    EncounterEnded = "ENCOUNTER_ENDED", -- (encounterInformation)
+    EncounterEnded = "ENCOUNTER_ENDED", -- (encounterInformation),
+    CombatEntered = "COMBAT_ENTERED", -- ()
+    CombatLeft = "COMBAT_LEFT", -- ()
+    UnitLeftCombat = "UNIT_LEFT_COMBAT", -- (unitName, unitId, unitGuid)
+    UnitJoinedCombat = "UNIT_JOINED_COMBAT", -- (unitName, unitId, unitGuid)
 }

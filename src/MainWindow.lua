@@ -1,7 +1,7 @@
-local MainWindow = EffusionRaidAssist.ModuleManager:NewModule("MainWindow")
+EffusionRaidAssistMainWindow = EffusionRaidAssistModule("MainWindow")
 local AceGUI = LibStub("AceGUI-3.0")
 
-function MainWindow:OnModuleInitialize()
+function EffusionRaidAssistMainWindow:OnModuleInitialize()
     self.window, self.moduleSelection, self.content = self:CreateWindow("EffusionRaidAssist")
     _G["EffusionRaidAssistMainWindow"] = self.window.frame
     table.insert(UISpecialFrames, "EffusionRaidAssistMainWindow")
@@ -10,8 +10,8 @@ function MainWindow:OnModuleInitialize()
     end
 end
 
-function MainWindow:CreateWindow(title)
-    local window = AceGUI:Create("Frame") 
+function EffusionRaidAssistMainWindow:CreateWindow(title)
+    local window = AceGUI:Create("Frame")
     window:SetHeight(900 / 1.4)
     window:SetWidth(1600 / 1.4)
     window:SetLayout("Fill")
@@ -29,7 +29,7 @@ function MainWindow:CreateWindow(title)
     return window, windowContent, moduleContent
 end
 
-function MainWindow:SetActiveModule(container, moduleName)
+function EffusionRaidAssistMainWindow:SetActiveModule(container, moduleName)
     self.selectedModule = moduleName
     container:ReleaseChildren()
     if (EffusionRaidAssist.ModuleManager:GetModuleByName(moduleName)) then
@@ -37,7 +37,7 @@ function MainWindow:SetActiveModule(container, moduleName)
     end
 end
 
-function MainWindow:CreateDropdownList()
+function EffusionRaidAssistMainWindow:CreateDropdownList()
     local result = {}
     for _, module in pairs(self:GetModulesWithUserinterface()) do
         result[module.name] = module.name
@@ -45,7 +45,7 @@ function MainWindow:CreateDropdownList()
     return result
 end
 
-function MainWindow:GetModulesWithUserinterface()
+function EffusionRaidAssistMainWindow:GetModulesWithUserinterface()
     local result = {}
     for _, module in pairs(EffusionRaidAssist.ModuleManager:GetEnabledModules()) do
         if (module["CreateUserinterface"] ~= nil) then
@@ -55,7 +55,7 @@ function MainWindow:GetModulesWithUserinterface()
     return result
 end
 
-function MainWindow:MINIMAP_ICON_CLICKED(_, clickType)
+function EffusionRaidAssistMainWindow:MINIMAP_ICON_CLICKED(_, clickType)
     if (clickType == "LeftButton") then
         if (self.window:IsShown()) then
             self.window:Hide()
@@ -65,11 +65,11 @@ function MainWindow:MINIMAP_ICON_CLICKED(_, clickType)
     end
 end
 
-function MainWindow:UpdateDropdownList()
+function EffusionRaidAssistMainWindow:UpdateDropdownList()
     self.moduleSelection:SetGroupList(self:CreateDropdownList())
 end
 
-function MainWindow:MODULE_ENABLED(moduleName)
+function EffusionRaidAssistMainWindow:MODULE_ENABLED(moduleName)
     self:UpdateDropdownList()
     if (self.selectedModule == nil) then
         if (table.getn(self:GetModulesWithUserinterface()) > 0) then
@@ -78,7 +78,7 @@ function MainWindow:MODULE_ENABLED(moduleName)
     end
 end
 
-function MainWindow:MODULE_DISABLED(moduleName)
+function EffusionRaidAssistMainWindow:MODULE_DISABLED(moduleName)
     self:UpdateDropdownList()
     if (moduleName == self.selectedModule) then
         if (table.getn(self:GetModulesWithUserinterface()) > 0) then
@@ -89,7 +89,7 @@ function MainWindow:MODULE_DISABLED(moduleName)
     end
 end
 
-function MainWindow:PROFILE_CHANGED()
+function EffusionRaidAssistMainWindow:PROFILE_CHANGED()
     self:UpdateDropdownList()
     if (table.getn(self:GetModulesWithUserinterface()) > 0) then
         self.moduleSelection:SetGroup(self:GetModulesWithUserinterface()[1].name)
@@ -98,7 +98,7 @@ function MainWindow:PROFILE_CHANGED()
     end
 end
 
-function MainWindow:GetCustomEvents()
+function EffusionRaidAssistMainWindow:GetCustomEvents()
     return {
         "MINIMAP_ICON_CLICKED",
         "MODULE_ENABLED",
