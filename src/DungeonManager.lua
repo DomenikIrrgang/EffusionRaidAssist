@@ -24,10 +24,12 @@ end
 --]]
 function EffusionRaidAssistDungeonManager:PLAYER_ENTERING_WORLD()
     if (self:IsInDungeon()) then
-        self.currentDungeon = self:GetDungeonName()
-        EffusionRaidAssist.EventDispatcher:DispatchEvent("DUNGEON_ENTERED", self:GetDungeonName())
+        self.currentDungeon = self:GetDungeonInfo()
+        EffusionRaidAssist:DebugMessage("Entered Dungeon", self.currentDungeon.name, "(" .. self.currentDungeon.instanceId .. ")")
+        EffusionRaidAssist.EventDispatcher:DispatchEvent("DUNGEON_ENTERED", self.currentDungeon)
     end
     if (self:IsInDungeon() ~= true and self.currentDungeon ~= nil) then
+        EffusionRaidAssist:DebugMessage("Left Dungeon", self.currentDungeon.name, "(" .. self.currentDungeon.instanceId .. ")")
         EffusionRaidAssist.EventDispatcher:DispatchEvent("DUNGEON_LEFT", self.currentDungeon)
         self.currentDungeon = nil
     end
@@ -37,7 +39,7 @@ end
     Returns true if the player is inside of an instance.
 --]]
 function EffusionRaidAssistDungeonManager:IsInDungeon()
-    return select(2, GetInstanceInfo()) ~= 'none'
+    return select(2, GetInstanceInfo()) == "party" or select(2, GetInstanceInfo()) == "raid"
 end
 
 --[[
@@ -47,6 +49,24 @@ function EffusionRaidAssistDungeonManager:GetDungeonName()
     if self:IsInDungeon() then
         local dungeonName = GetInstanceInfo()
         return dungeonName
+    end
+    return nil
+end
+
+--[[
+    Returns information about the current dungeon. Nil if not in a dungeon.
+--]]
+function EffusionRaidAssistDungeonManager:GetDungeonInfo()
+    if self:IsInDungeon() then
+        local name, _, difficultyId, difficultyName, maxPlayers, _, _, instanceId, instanceGroupSize = GetInstanceInfo()
+        return {
+            name = name,
+            difficultyId = difficultyId,
+            difficultyName = difficultyName,
+            maximumPlayers = maxPlayers,
+            instanceId = instanceId,
+            instanceGroupSize = instanceGroupSize
+        }
     end
     return nil
 end
