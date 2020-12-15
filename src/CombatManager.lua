@@ -14,6 +14,8 @@ function EffusionRaidAssistCombatManager.new()
     EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SWING_MISSED", nil, self, self.UnitJoinedCombat)
     EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_DAMAGE", nil, self, self.UnitJoinedCombat)
     EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_AURA_APPLIED", nil, self, self.UnitJoinedCombat)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_CAST_MISSED", nil, self, self.UnitJoinedCombat)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_CAST_SUCCESS", nil, self, self.UnitJoinedCombat)
     return self
 end
 
@@ -67,13 +69,13 @@ function EffusionRaidAssistCombatManager:LeaveCombat()
     self.inCombat = false
     EffusionRaidAssist:DebugMessage("Player Left Combat")
     self:ClearUnits()
-    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.CombatEntered)
+    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.CombatLeft)
 end
 
 function EffusionRaidAssistCombatManager:EnterCombat()
     self.inCombat = true
     EffusionRaidAssist:DebugMessage("Player Entered Combat")
-    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.CombatLeft)
+    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.CombatEntered)
 end
 
 function EffusionRaidAssistCombatManager:IsInCombat()

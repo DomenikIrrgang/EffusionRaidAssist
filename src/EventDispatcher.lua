@@ -7,6 +7,7 @@ function EffusionRaidAssistEventDispatcher.new()
     local self = setmetatable({}, EffusionRaidAssistEventDispatcher)
     self.listener = {}
     self.gameEvents = {}
+    self.enabled = true
     self.frame = CreateFrame("Frame", "EffusionRaidAssistEventDispatcher")
     self.frame:SetScript("OnEvent", function(_, event, ...)
         self:DispatchEvent(event, ...)
@@ -100,18 +101,41 @@ end
     @param ... Arguments of the event.
 --]]
 function EffusionRaidAssistEventDispatcher:DispatchEvent(event, ...)
-    if self.listener[event] ~= nil then
-        for _, value in pairs(self.listener[event]) do
-            local listener = value.listener
-            if (listener["IsEnabled"] == nil or (listener["IsEnabled"] ~= nil and listener:IsEnabled())) then
-                if (value.callback ~= nil) then
-                    value.callback(listener, ...)
-                else
-                    if (listener[event] ~= nil) then
-                        listener[event](listener, ...)
+    if (self.enabled) then
+        if (EffusionRaidAssist.MetaData.EventLogging) then
+            EffusionRaidAssist:DebugMessage(event, ...)
+        end
+        if self.listener[event] ~= nil then
+            for _, value in pairs(self.listener[event]) do
+                local listener = value.listener
+                if (listener["IsEnabled"] == nil or (listener["IsEnabled"] ~= nil and listener:IsEnabled())) then
+                    if (value.callback ~= nil) then
+                        value.callback(listener, ...)
+                    else
+                        if (listener[event] ~= nil) then
+                            listener[event](listener, ...)
+                        end
                     end
                 end
             end
         end
     end
+end
+
+--[[
+    Enables/disables the eventdispatcher.
+
+    @param enabled If false dispatcher stops dispatching events.
+--]]
+function EffusionRaidAssistEventDispatcher:SetEnabled(enabled)
+    self.enabled = enabled
+end
+
+--[[
+    Returns true if dispatcher is enabled.
+
+    @return True if enabled.
+--]]
+function EffusionRaidAssistEventDispatcher:IsEnabled()
+    return self.enabled
 end

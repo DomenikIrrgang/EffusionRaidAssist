@@ -5,34 +5,25 @@ EffusionRaidAssistOptions = CreateClass()
 --]]
 function EffusionRaidAssistOptions.new()
 	local self = setmetatable({}, EffusionRaidAssistOptions)
-	self.name = "options"
-    EffusionRaidAssist.EventDispatcher:AddEventListener(self)
+    EffusionRaidAssist.EventDispatcher:AddEventCallback(EffusionRaidAssist.CustomEvents.EffusionRaidAssistInitFinished, self, self.Init)
+	EffusionRaidAssist.EventDispatcher:AddEventCallback(EffusionRaidAssist.CustomEvents.ModuleLoaded, self, self.Init)
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(EffusionRaidAssist.MetaData.AddonName, EffusionRaidAssist.MetaData.AddonName)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(EffusionRaidAssist.MetaData.AddonName, self.GetOptionsTable)
     return self
-end
-
---[[
-  Returns the customevents that need to be handled by options.
-
-  @return Customevents option needs to handle.
---]]
-function EffusionRaidAssistOptions:GetCustomEvents()
-    return {
-        "EFFUSION_RAID_ASSIST_INIT_FINISHED"
-    }
 end
 
 --[[
 	Registers OptionsTables and invokes the OPTIONS_TABLE_INIT event
 --]]
-function EffusionRaidAssistOptions:EFFUSION_RAID_ASSIST_INIT_FINISHED()
-	EffusionRaidAssist.EventDispatcher:DispatchEvent("OPTIONS_TABLE_INIT")
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("EffusionRaidAssist", self.GetOptionsTable)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("EffusionRaidAssist", "EffusionRaidAssist")
+function EffusionRaidAssistOptions:Init()
+	EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.OptionsTableInit)
+	LibStub("AceConfigRegistry-3.0"):NotifyChange(EffusionRaidAssist.MetaData.AddonName)
 end
 
 --[[
 	Dynamically builds the optionstable to be displayed in the GUI.
-  @return The optionstable.
+
+	@return The optionstable.
 --]]
 function EffusionRaidAssistOptions:GetOptionsTable()
 	local optionsTable = {
@@ -58,7 +49,7 @@ function EffusionRaidAssistOptions:GetModulesTable()
 			},
 		},
 	}
-    for key, module in pairs(EffusionRaidAssist.ModuleManager:GetModules()) do
+    for _, module in pairs(EffusionRaidAssist.ModuleManager:GetModules()) do
 		modules.args[module.name] = module:GetOptionsTable()
 	end
 	return modules
@@ -66,6 +57,7 @@ end
 
 --[[
 	Dynamically creates the table for profile options.
+
 	@return Profile options.
 --]]
 function EffusionRaidAssistOptions:GetProfileTable()
@@ -86,14 +78,14 @@ function EffusionRaidAssistOptions:GetProfileTable()
 				width = "full",
 				desc = "Sets the current profile.",
 				type = "select",
-				get = function(info) 
+				get = function() 
 					for k,v in pairs(EffusionRaidAssist.Storage:GetProfiles()) do
 						if (v == EffusionRaidAssist.Storage:GetCurrentProfile()) then
 							return k
 						end
 					end
 				end,
-				set = function(info, value)
+				set = function(_, value)
 					EffusionRaidAssist.Storage:SetProfile(EffusionRaidAssist.Storage:GetProfiles()[value])
 				end,
 				values = EffusionRaidAssist.Storage:GetProfiles(),
@@ -104,10 +96,10 @@ function EffusionRaidAssistOptions:GetProfileTable()
 				width = "full",
 				desc = "Copies settings from another profile and overides the current ones.",
 				type = "select",
-				get = function(info) 
+				get = function() 
 					return "Profiles"
 				end,
-				set = function(info, value)
+				set = function(_, value)
 					EffusionRaidAssist.Storage:CopyProfile(EffusionRaidAssist.Storage:GetProfiles()[value])
 				end,
 				values = EffusionRaidAssist.Storage:GetCopyProfiles(),

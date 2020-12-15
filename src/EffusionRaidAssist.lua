@@ -11,10 +11,10 @@ function EffusionRaidAssist:OnInitialize()
     self.CombatManager = EffusionRaidAssistCombatManager()
     self.GroupManager = EffusionRaidAssistGroupManager()
     self.FramePool = EffusionRaidAssistFramePool()
-    self.ModuleManager:AddModule(EffusionRaidAssistMinimapIcon)
-    self.ModuleManager:AddModule(EffusionRaidAssistMainWindow)
     self.EventDispatcher:DispatchEvent(self.CustomEvents.EffusionRaidAssistInitStarted)
     self.EventDispatcher:DispatchEvent(self.CustomEvents.EffusionRaidAssistInit)
+    self.ModuleManager:AddModule(EffusionRaidAssistMinimapIcon)
+    self.ModuleManager:AddModule(EffusionRaidAssistMainWindow)
     self.EventDispatcher:DispatchEvent(self.CustomEvents.EffusionRaidAssistInitFinished)
 end
 
@@ -28,10 +28,16 @@ function EffusionRaidAssist:DebugMessage(...)
     end
 end
 
+function EffusionRaidAssist:ModuleMessage(name, ...)
+    self:ChatMessage("|c00008888[" .. name .. "]|r", ...)
+end
+
 EffusionRaidAssist.MetaData = {
     Version = "0.1",
-    Date = "11/17/2020",
+    Date = "12/15/2020",
     Authors = "Suu, Gamko",
     Color = "|c0000FF00",
-    Mode = "Debug"
+    Mode = "Debug",
+    EventLogging = false,
+    AddonName = "EffusionRaidAssist"
 }

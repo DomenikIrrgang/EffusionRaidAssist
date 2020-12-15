@@ -1,17 +1,9 @@
 EffusionRaidAssistModule = CreateClass()
 
-function EffusionRaidAssistModule.new(name, object)
+function EffusionRaidAssistModule.new(name)
     local self = setmetatable({}, EffusionRaidAssistModule)
     self.name = name
     return self
-end
-
-function EffusionRaidAssistModule:OnInitialize()
-    EffusionRaidAssist.EventDispatcher:AddEventListener(self)
-    if (self.OnModuleInitialize) then
-        self:OnModuleInitialize()
-    end
-    self:SetEnabled(self:IsEnabled())
 end
 
 function EffusionRaidAssistModule:CombatLogEvent(event, spellName, callback)
@@ -19,6 +11,7 @@ function EffusionRaidAssistModule:CombatLogEvent(event, spellName, callback)
 end
 
 function EffusionRaidAssistModule:SetEnabled(enabled)
+    self:GetData().enabled = enabled
     if (self:IsEnabled()) then
         if (self.OnEnable) then
             self:OnEnable()
@@ -40,6 +33,22 @@ function EffusionRaidAssistModule:GetData()
     return EffusionRaidAssist.Storage:GetData().modules[self.name]
 end
 
+function EffusionRaidAssistModule:ChatMessage(...)
+    EffusionRaidAssist:ModuleMessage(self.name, ...)
+end
+
+function EffusionRaidAssistModule:AddEventCallback(event, listener, callback)
+    EffusionRaidAssist.EventDispatcher:AddEventCallback(event, self, self:EventCallbackWrapper(listener, callback))
+end
+
+function EffusionRaidAssistModule:EventCallbackWrapper(listener, callback)
+    return function(self, ...)
+        if (EffusionRaidAssist.ModuleManager:GetModuleByName(self.name) and self:IsEnabled()) then
+            callback(listener, ...)
+        end
+    end
+end
+
 function EffusionRaidAssistModule:GetOptionsTable()
     local result = {
         name = self.name,
@@ -52,12 +61,20 @@ function EffusionRaidAssistModule:GetOptionsTable()
                 type = "toggle",
                 name = "Enabled",
                 get = function()
-                    return self:GetData().enabled
+                    return self:IsEnabled()
                 end,
                 set = function(_, value)
-                    self:GetData().enabled = value
-                    self:SetEnabled(self:GetData().enabled)
+                    self:SetEnabled(value)
                 end,
+            },
+            remove = {
+                order = 99,
+                type = "execute",
+                name = "Remove Module",
+                func = function()
+                    EffusionRaidAssist.ModuleManager:UnloadModule(self)
+                end,
+                width = "full",
             }
         }
     }

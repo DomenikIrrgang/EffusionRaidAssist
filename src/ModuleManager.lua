@@ -3,7 +3,7 @@ EffusionRaidAssistModuleManager = CreateClass()
 function EffusionRaidAssistModuleManager.new()
     local self = setmetatable({}, EffusionRaidAssistModuleManager)
     self.modules = {}
-    EffusionRaidAssist.EventDispatcher:AddEventCallback("EFFUSION_RAID_ASSIST_INIT_FINISHED", self, self.Init)
+    EffusionRaidAssist.EventDispatcher:AddEventCallback("PLAYER_LOGIN", self, self.Init)
     return self
 end
 
@@ -32,10 +32,23 @@ end
 
 function EffusionRaidAssistModuleManager:Init()
     for _, module in pairs(self.modules) do
-        if (module.OnInitialize ~= nil) then
-            module:OnInitialize()
-        end
+        self:LoadModule(module)
     end
+end
+
+function EffusionRaidAssistModuleManager:LoadModule(module)
+    if (module.OnModuleInitialize ~= nil) then
+        module:OnModuleInitialize()
+    end
+    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.ModuleLoaded, module.name)
+end
+
+function EffusionRaidAssistModuleManager:UnloadModule(module)
+    if (module.OnModuleUninitialize) then
+        module:OnModuleUninitialize()
+    end
+    self:RemoveModule(module)
+    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.ModuleUnloaded, module.name)
 end
 
 function EffusionRaidAssistModuleManager:NewModule(name, object)
@@ -49,3 +62,10 @@ function EffusionRaidAssistModuleManager:AddModule(module)
     table.insert(self.modules, module)
 end
 
+function EffusionRaidAssistModuleManager:RemoveModule(module)
+    for index, value in pairs(self:GetModules()) do
+        if (module.name == value.name) then
+            table.remove(self.modules, index)
+        end
+    end
+end

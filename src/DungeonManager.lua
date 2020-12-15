@@ -6,31 +6,22 @@ EffusionRaidAssistDungeonManager = CreateClass()
 function EffusionRaidAssistDungeonManager.new()
     local self = setmetatable({}, EffusionRaidAssistDungeonManager)
     self.currentDungeon = nil
-    EffusionRaidAssist.EventDispatcher:AddEventListener(self)
+    EffusionRaidAssist.EventDispatcher:AddEventCallback("PLAYER_ENTERING_WORLD", self, self.PlayerEnteringWorld)
     return self
-end
-
---[[
-    Returns the events that this class wants to be called for.
---]]
-function EffusionRaidAssistDungeonManager:GetGameEvents()
-    return {
-        "PLAYER_ENTERING_WORLD",
-    }
 end
 
 --[[
     Checks if the player enters or leaves a dungeon and dispatches according custom events.
 --]]
-function EffusionRaidAssistDungeonManager:PLAYER_ENTERING_WORLD()
+function EffusionRaidAssistDungeonManager:PlayerEnteringWorld()
     if (self:IsInDungeon()) then
         self.currentDungeon = self:GetDungeonInfo()
         EffusionRaidAssist:DebugMessage("Entered Dungeon", self.currentDungeon.name, "(" .. self.currentDungeon.instanceId .. ")")
-        EffusionRaidAssist.EventDispatcher:DispatchEvent("DUNGEON_ENTERED", self.currentDungeon)
+        EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.DungeonEntered, self.currentDungeon)
     end
     if (self:IsInDungeon() ~= true and self.currentDungeon ~= nil) then
         EffusionRaidAssist:DebugMessage("Left Dungeon", self.currentDungeon.name, "(" .. self.currentDungeon.instanceId .. ")")
-        EffusionRaidAssist.EventDispatcher:DispatchEvent("DUNGEON_LEFT", self.currentDungeon)
+        EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.DungeonLeft, self.currentDungeon)
         self.currentDungeon = nil
     end
 end
