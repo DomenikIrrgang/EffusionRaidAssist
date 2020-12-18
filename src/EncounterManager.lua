@@ -6,31 +6,9 @@ EffusionRaidAssistEncounterManager= CreateClass()
 function EffusionRaidAssistEncounterManager.new()
     local self = setmetatable({}, EffusionRaidAssistEncounterManager)
     self.activeEncounters = {}
-    EffusionRaidAssist.EventDispatcher:AddEventListener(self)
+    EffusionRaidAssist.EventDispatcher:AddEventCallback("ENCOUNTER_START", self, self.StartEncounter)
+    EffusionRaidAssist.EventDispatcher:AddEventCallback("ENCOUNTER_END", self, self.EndEncounter)
     return self
-end
-
---[[
-    Returns the events that this class wants to be called for.
---]]
-function EffusionRaidAssistEncounterManager:GetGameEvents()
-    return {
-        "ENCOUNTER_START",
-        "ENCOUNTER_END"
-    }
-end 
---[[
-    Stores information about the boss encounters that started.
---]]
-function EffusionRaidAssistEncounterManager:ENCOUNTER_START(id, name, difficulty, size)
-    self:StartEncounter(id, name, difficulty, size)
-end
-
---[[
-    Removes information about the boss encounters that ended.
---]]
-function EffusionRaidAssistEncounterManager:ENCOUNTER_END(id, name, difficulty, size, result)
-    self:EndEncounter(id, name, difficulty, size, result)
 end
 
 function EffusionRaidAssistEncounterManager:StartEncounter(id, name, difficulty, size)
@@ -39,12 +17,14 @@ function EffusionRaidAssistEncounterManager:StartEncounter(id, name, difficulty,
     EffusionRaidAssist:ChatMessage(encounter.name, "(" .. encounter:GetDifficultyName() .. ", " .. encounter.size .. "-man) engaged! Good luck.")
 end
 
-function EffusionRaidAssistEncounterManager:EndEncounter(id, name, difficulty, size, result)
+function EffusionRaidAssistEncounterManager:EndEncounter(id, _, _, _, result)
     local encounter = self.activeEncounters[id]
-    encounter:End(result)
-    EffusionRaidAssist:ChatMessage("Encounter against", encounter.name, "(" .. encounter:GetDifficultyName() .. ") ended after", string.format("%.2f", encounter:GetDuration()), " seconds.", "(" .. encounter:GetResultName() .. ")")
-    self.activeEncounters[id] = nil
-    self:ArchiveEncounter(encounter)
+    if (encounter) then
+        encounter:End(result)
+        EffusionRaidAssist:ChatMessage("Encounter against", encounter.name, "(" .. encounter:GetDifficultyName() .. ", " .. encounter.size .. "-man) ended after", string.format("%.2f", encounter:GetDuration()), " seconds.", "(" .. encounter:GetResultName() .. ")")
+        self.activeEncounters[id] = nil
+        self:ArchiveEncounter(encounter)
+    end
 end
 
 --[[

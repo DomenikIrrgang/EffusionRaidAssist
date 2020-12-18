@@ -80,7 +80,7 @@ end
     @return Name of the difficulty.
 --]]
 function EffusionRaidAssistEncounter:GetDifficultyName()
-    return self.difficultyMap[self.difficulty]
+    return EffusionRaidAssistEncounter.difficultyMap[self.difficulty]
 end
 
 --[[
@@ -144,6 +144,7 @@ EffusionRaidAssistEncounter.difficultyMap[14] = "Normal"
 EffusionRaidAssistEncounter.difficultyMap[15] = "Heroic"
 EffusionRaidAssistEncounter.difficultyMap[16] = "Mythic"
 EffusionRaidAssistEncounter.difficultyMap[17] = "LFR"
+EffusionRaidAssistEncounter.difficultyMap[23] = "Mythic"
 EffusionRaidAssistEncounter.difficultyMap[148] = "Normal"
 EffusionRaidAssistEncounter.difficultyMap[150] = "Normal"
 

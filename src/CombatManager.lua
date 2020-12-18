@@ -9,22 +9,25 @@ function EffusionRaidAssistCombatManager.new()
     self.inCombat = false
     EffusionRaidAssist.EventDispatcher:AddEventCallback("PLAYER_REGEN_ENABLED", self, self.LeaveCombat)
     EffusionRaidAssist.EventDispatcher:AddEventCallback("PLAYER_REGEN_DISABLED", self, self.EnterCombat)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("UNIT_DIED", nil, self, self.UnitDied)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SWING_DAMAGE", nil, self, self.UnitJoinedCombat)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SWING_MISSED", nil, self, self.UnitJoinedCombat)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_DAMAGE", nil, self, self.UnitJoinedCombat)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_AURA_APPLIED", nil, self, self.UnitJoinedCombat)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_CAST_MISSED", nil, self, self.UnitJoinedCombat)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_CAST_SUCCESS", nil, self, self.UnitJoinedCombat)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("UNIT_DIED", {}, self, self.UnitDied)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("UNIT_DESTROYED", {}, self, self.UnitDied)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SWING_DAMAGE", {}, self, self.UnitJoinedCombat)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SWING_MISSED", {}, self, self.UnitJoinedCombat)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_DAMAGE", {}, self, self.UnitJoinedCombat)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_AURA_APPLIED", {}, self, self.UnitJoinedCombat)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_CAST_MISSED", {}, self, self.UnitJoinedCombat)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback("SPELL_CAST_SUCCESS", {}, self, self.UnitJoinedCombat)
     return self
 end
 
 function EffusionRaidAssistCombatManager:UnitJoinedCombat(event)
-    if (event:IsTargetPlayer() and event:IsSourceCreature() and UnitIsInPlayersGroup(event.targetName)) then
-        self:AddUnit(event.sourceName, event.sourceUnitId, event.sourceGuid)
-    end
-    if (event:IsSourcePlayer() and event:IsTargetCreature() and UnitIsInPlayersGroup(event.sourceName)) then
-        self:AddUnit(event.targetName, event.targetUnitId, event.targetGuid)
+    if (self:IsInCombat()) then
+        if (event:IsTargetPlayer() and event:IsSourceCreature() and UnitIsInPlayersGroup(event.targetName)) then
+            self:AddUnit(event.sourceName, event.sourceUnitId, event.sourceGuid)
+        end
+        if (event:IsSourcePlayer() and event:IsTargetCreature() and UnitIsInPlayersGroup(event.sourceName)) then
+            self:AddUnit(event.targetName, event.targetUnitId, event.targetGuid)
+        end
     end
 end
 

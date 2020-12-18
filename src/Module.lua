@@ -6,8 +6,12 @@ function EffusionRaidAssistModule.new(name)
     return self
 end
 
-function EffusionRaidAssistModule:CombatLogEvent(event, spellName, callback)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback(event, spellName, self, callback)
+function EffusionRaidAssistModule:CombatLogEvent(event, event, callback)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback(event, spellId, self, callback)
+end
+
+function EffusionRaidAssistModule:CombatLogEventFromUnit(event, unitId, spellId, callback)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback(event, unitId, spellId, self, callback)
 end
 
 function EffusionRaidAssistModule:SetEnabled(enabled)
