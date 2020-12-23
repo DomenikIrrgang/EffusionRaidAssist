@@ -16,6 +16,12 @@ function TableContainsValue(table, value)
     return false
 end
 
+function BindCallback(context, callback)
+    return function(...)
+        callback(context, ...)
+    end
+end
+
 function InterpolateValue(minimumValue, maximumValue, percentage)
     return minimumValue + ((maximumValue - minimumValue) * percentage)
 end
@@ -80,6 +86,14 @@ function table.getkeys(table1)
         table.insert(keys, key)
     end
     return keys
+end
+
+function table.getvalues(table1)
+    local values = {}
+    for _, value in pairs(table1) do
+        table.insert(values, value)
+    end
+    return values
 end
 
 function UnitIsInPlayersGroup(unit)

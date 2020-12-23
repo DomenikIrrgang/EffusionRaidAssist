@@ -6,26 +6,24 @@ function EffusionRaidAssistModule.new(name)
     return self
 end
 
-function EffusionRaidAssistModule:CombatLogEvent(event, event, callback)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback(event, spellId, self, callback)
-end
-
-function EffusionRaidAssistModule:CombatLogEventFromUnit(event, unitId, spellId, callback)
-    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback(event, unitId, spellId, self, callback)
+function EffusionRaidAssistModule:CombatLogEvent(event, data, callback)
+    EffusionRaidAssist.CombatLogEventDispatcher:AddEventCallback(event, data, self, callback)
 end
 
 function EffusionRaidAssistModule:SetEnabled(enabled)
-    self:GetData().enabled = enabled
-    if (self:IsEnabled()) then
+    if (not self:IsEnabled() and enabled == true) then
+        self:GetData().enabled =  true
         if (self.OnEnable) then
             self:OnEnable()
         end
         EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.ModuleEnabled, self.name)
-    else
+    end
+    if (self:IsEnabled() and enabled == false) then
         if (self.OnDisable) then
             self:OnDisable()
         end
         EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.ModuleDisabled, self.name)
+        self:GetData().enabled = false
     end
 end
 
