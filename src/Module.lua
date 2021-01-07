@@ -67,6 +67,14 @@ function EffusionRaidAssistModule:GetDefaultOptions()
     return data
 end
 
+function EffusionRaidAssistModule:OptionsGetter(path)
+    return function() return self:GetData(path) end
+end
+
+function EffusionRaidAssistModule:OptionsSetter(path)
+    return function(_, value) return self:ChangeData(path, value) end
+end
+
 function EffusionRaidAssistModule:EventCallbackWrapper(listener, callback)
     return function(self, ...)
         if (EffusionRaidAssist.ModuleManager:GetModuleByName(self.name) and self:IsEnabled()) then

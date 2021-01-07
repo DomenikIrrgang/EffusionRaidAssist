@@ -54,12 +54,8 @@ function EffusionRaidAssistMinimapIcon:GetOptions()
             order = 1,
             type = "toggle",
             name = "Hide Minimapicon",
-            get = function()
-                return self:GetData("hideMinimap")
-            end,
-            set = function(_, value)
-                self:ChangeData("hideMinimap", value)
-            end,
+            get = self:OptionsGetter("hideMinimap"),
+            set = self:OptionsSetter("hideMinimap"),
         }
     }
 end
