@@ -3,7 +3,6 @@ EffusionRaidAssistModuleManager = CreateClass()
 function EffusionRaidAssistModuleManager.new()
     local self = setmetatable({}, EffusionRaidAssistModuleManager)
     self.modules = {}
-    EffusionRaidAssist.EventDispatcher:AddEventCallback("PLAYER_LOGIN", self, self.Init)
     return self
 end
 
@@ -34,6 +33,7 @@ function EffusionRaidAssistModuleManager:Init()
     for _, module in pairs(self.modules) do
         self:LoadModule(module)
     end
+    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.AllModulesInitialized, self.modules)
 end
 
 function EffusionRaidAssistModuleManager:LoadModule(module)

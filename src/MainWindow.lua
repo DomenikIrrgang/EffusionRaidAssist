@@ -2,6 +2,10 @@ EffusionRaidAssistMainWindow = EffusionRaidAssistModule("MainWindow")
 local AceGUI = LibStub("AceGUI-3.0")
 
 function EffusionRaidAssistMainWindow:OnModuleInitialize()
+    EffusionRaidAssistMainWindow:AddEventCallback("MINIMAP_ICON_CLICKED", self, self.MinimapIconClicked)
+    EffusionRaidAssistMainWindow:AddEventCallback("MODULE_ENABLED", self, self.ModuleEnabled)
+    EffusionRaidAssistMainWindow:AddEventCallback("MODULE_DISABLED", self, self.ModuleDisabled)
+    EffusionRaidAssistMainWindow:AddEventCallback("PROFILE_CHANGED", self, self.ProfileChanged)
     self.window, self.moduleSelection, self.content = self:CreateWindow("EffusionRaidAssist")
     _G["EffusionRaidAssistMainWindow"] = self.window.frame
     table.insert(UISpecialFrames, "EffusionRaidAssistMainWindow")
@@ -55,7 +59,7 @@ function EffusionRaidAssistMainWindow:GetModulesWithUserinterface()
     return result
 end
 
-function EffusionRaidAssistMainWindow:MINIMAP_ICON_CLICKED(_, clickType)
+function EffusionRaidAssistMainWindow:MinimapIconClicked(_, clickType)
     if (clickType == "LeftButton") then
         if (self.window:IsShown()) then
             self.window:Hide()
@@ -69,7 +73,7 @@ function EffusionRaidAssistMainWindow:UpdateDropdownList()
     self.moduleSelection:SetGroupList(self:CreateDropdownList())
 end
 
-function EffusionRaidAssistMainWindow:MODULE_ENABLED(moduleName)
+function EffusionRaidAssistMainWindow:ModuleEnabled(moduleName)
     self:UpdateDropdownList()
     if (self.selectedModule == nil) then
         if (table.getn(self:GetModulesWithUserinterface()) > 0) then
@@ -78,7 +82,7 @@ function EffusionRaidAssistMainWindow:MODULE_ENABLED(moduleName)
     end
 end
 
-function EffusionRaidAssistMainWindow:MODULE_DISABLED(moduleName)
+function EffusionRaidAssistMainWindow:ModuleDisabled(moduleName)
     self:UpdateDropdownList()
     if (moduleName == self.selectedModule) then
         if (table.getn(self:GetModulesWithUserinterface()) > 0) then
@@ -89,7 +93,7 @@ function EffusionRaidAssistMainWindow:MODULE_DISABLED(moduleName)
     end
 end
 
-function EffusionRaidAssistMainWindow:PROFILE_CHANGED()
+function EffusionRaidAssistMainWindow:ProfileChanged()
     self:UpdateDropdownList()
     if (table.getn(self:GetModulesWithUserinterface()) > 0) then
         self.moduleSelection:SetGroup(self:GetModulesWithUserinterface()[1].name)

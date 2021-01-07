@@ -22,6 +22,13 @@ function BindCallback(context, callback)
     end
 end
 
+function DoubleCallback(firstFunction, secondFunction)
+    return function(...)
+        firstFunction(...)
+        return secondFunction(...)
+    end
+end
+
 function InterpolateValue(minimumValue, maximumValue, percentage)
     return minimumValue + ((maximumValue - minimumValue) * percentage)
 end
@@ -55,6 +62,10 @@ function CreateClass()
     return newClass
 end
 
+function table.pack(...)
+    return { ... }
+end
+
 function table.copy(t)
     if type(t) ~= 'table' then return t end
     local result = {}
@@ -62,6 +73,21 @@ function table.copy(t)
         result[k] = table.copy(v)
     end
     return result
+end
+
+function table.deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[table.deepcopy(orig_key)] = table.deepcopy(orig_value)
+        end
+        setmetatable(copy, table.deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
 end
 
 function table.merge(table1, table2)
@@ -96,6 +122,10 @@ function table.getvalues(table1)
     return values
 end
 
+function GetFullPlayerName()
+    return UnitName("player") .. "-" .. GetRealmName()
+end
+
 function UnitIsInPlayersGroup(unit)
     if (unit == UnitName("player")) then
         return true
@@ -106,4 +136,30 @@ function UnitIsInPlayersGroup(unit)
         end
     end
     return false
+end
+
+string.split = function(s, p)
+    local temp = {}
+    local index = 0
+    local last_index = string.len(s)
+
+    while true do
+        local i, e = string.find(s, p, index)
+
+        if i and e then
+            local next_index = e + 1
+            local word_bound = i - 1
+            table.insert(temp, string.sub(s, index, word_bound))
+            index = next_index
+        else
+            if index > 0 and index <= last_index then
+                table.insert(temp, string.sub(s, index, last_index))
+            elseif index == 0 then
+                temp = nil
+            end
+            break
+        end
+    end
+
+    return temp
 end

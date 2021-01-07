@@ -31,8 +31,20 @@ function EffusionRaidAssistModule:IsEnabled()
     return self:GetData().enabled
 end
 
-function EffusionRaidAssistModule:GetData()
-    return EffusionRaidAssist.Storage:GetData().modules[self.name]
+function EffusionRaidAssistModule:GetData(name)
+    local path = "modules." .. self.name
+    if (name) then
+        path = path .. "." .. name
+    end
+    return EffusionRaidAssist.Storage:GetData(path)
+end
+
+function EffusionRaidAssistModule:RegisterDataCallback(path, callback)
+    EffusionRaidAssist.Storage:RegisterDataCallback("modules." .. self.name .. "." .. path, callback)
+end
+
+function EffusionRaidAssistModule:ChangeData(path, value)
+    EffusionRaidAssist.Storage:ChangeData("modules." .. self.name .. "." .. path, value)
 end
 
 function EffusionRaidAssistModule:ChatMessage(...)
@@ -41,6 +53,18 @@ end
 
 function EffusionRaidAssistModule:AddEventCallback(event, listener, callback)
     EffusionRaidAssist.EventDispatcher:AddEventCallback(event, self, self:EventCallbackWrapper(listener, callback))
+end
+
+function EffusionRaidAssistModule:GetDefaultOptions()
+    local data = {
+        enabled = true
+    }
+    if (self.GetDefaultSettings) then
+        for key, value in pairs(self:GetDefaultSettings()) do
+            data[key] = value
+        end
+    end
+    return data
 end
 
 function EffusionRaidAssistModule:EventCallbackWrapper(listener, callback)

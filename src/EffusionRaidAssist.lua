@@ -7,7 +7,7 @@ function EffusionRaidAssist:OnInitialize()
     self.DungeonManager = EffusionRaidAssistDungeonManager()
     self.EncounterManager = EffusionRaidAssistEncounterManager()
     self.Options = EffusionRaidAssistOptions()
-    self.Storage = EffusionRaidAssistDataStorage()
+    self.Storage = EffusionRaidAssistDataStorage("EffusionRaidAssistDB")
     self.CombatManager = EffusionRaidAssistCombatManager()
     self.GroupManager = EffusionRaidAssistGroupManager()
     self.FramePool = EffusionRaidAssistFramePool()
@@ -16,10 +16,20 @@ function EffusionRaidAssist:OnInitialize()
     self.ModuleManager:AddModule(EffusionRaidAssistMinimapIcon)
     self.ModuleManager:AddModule(EffusionRaidAssistMainWindow)
     self.EventDispatcher:DispatchEvent(self.CustomEvents.EffusionRaidAssistInitFinished)
+    self.EventDispatcher:AddEventCallback("PLAYER_LOGIN", self, self.OnPlayerLogin)
+end
+
+function EffusionRaidAssist:OnPlayerLogin()
+    self.Storage:Init()
+    self.ModuleManager:Init()
 end
 
 function EffusionRaidAssist:ChatMessage(...)
     print(self.MetaData.Color .. "EffusionRaidAssist|r: ", ...)
+end
+
+function EffusionRaidAssist:ErrorMessage(...)
+    self:ChatMessage("|c00FF0000[Error]|r", ...)
 end
 
 function EffusionRaidAssist:DebugMessage(...)

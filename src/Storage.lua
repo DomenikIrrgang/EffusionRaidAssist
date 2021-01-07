@@ -3,80 +3,166 @@ EffusionRaidAssistDataStorage = CreateClass()
 --[[
     Creates a new DataStorage.
 --]]
-function EffusionRaidAssistDataStorage.new()
+function EffusionRaidAssistDataStorage.new(savedVariableName)
     local self = setmetatable({}, EffusionRaidAssistDataStorage)
-    EffusionRaidAssist.EventDispatcher:AddEventListener(self)
+    self.savedVariableName = savedVariableName
+    self.defaultProfileName = "Default"
+    self.dataCallbacks = {}
     return self
 end
 
 function EffusionRaidAssistDataStorage:GetDefaultProfile()
-    return {
-        profile = {
-            modules = {
-                ['*'] = {
-                    enabled = true
-                }
-           }
-        }
+    local data = {
+        modules = {}
     }
+    for _, module in pairs(EffusionRaidAssist.ModuleManager:GetModules()) do
+        data.modules[module.name] = module:GetDefaultOptions()
+    end
+    return data
 end
 
 function EffusionRaidAssistDataStorage:ProfileChanged()
     EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.ProfileChanged)
 end
 
-function EffusionRaidAssistDataStorage:EFFUSION_RAID_ASSIST_INIT()
-    self.data = LibStub("AceDB-3.0"):New("EffusionRaidAssistDB", self:GetDefaultProfile())
-    self.data.RegisterCallback(self, "OnProfileChanged", "ProfileChanged")
-    self.data.RegisterCallback(self, "OnProfileCopied", "ProfileChanged")
-    self.data.RegisterCallback(self, "OnProfileReset", "ProfileChanged")
+function EffusionRaidAssistDataStorage:Init()
+    self.data = self:LoadData()
+    if (not self:HasActiveProfile()) then
+        self:SetProfile(self.defaultProfileName)
+    end
 end
 
-function EffusionRaidAssistDataStorage:GetCustomEvents()
-    return {
-        "EFFUSION_RAID_ASSIST_INIT"
-    }
+function EffusionRaidAssistDataStorage:LoadData()
+    if (_G[self.savedVariableName] == nil) then
+        _G[self.savedVariableName] = {}
+        _G[self.savedVariableName].profiles = {}
+        _G[self.savedVariableName].profiles[self.defaultProfileName] = self:GetDefaultProfile()
+        _G[self.savedVariableName].characterProfiles = {}
+    end
+    return _G[self.savedVariableName]
 end
 
-function EffusionRaidAssistDataStorage:ResetProfile()
-    self.data:ResetProfile()
+function EffusionRaidAssistDataStorage:ResetProfile(name)
+    local name = name
+    if (name == nil) then
+        name = self:GetCurrentProfile()
+    end
+    self.data.profiles[name] = self:GetDefaultProfile()
+    self:ProfileChanged()
 end
 
 function EffusionRaidAssistDataStorage:SetProfile(name)
-    self.data:SetProfile(name)
+    self.data.characterProfiles[GetFullPlayerName()] = name
+    self:ProfileChanged()
 end
 
 function EffusionRaidAssistDataStorage:NewProfile(name)
+    if (not self:ProfileExists(name)) then
+        self.data.profiles[name] = self:GetDefaultProfile()
+        self:SetProfile(name)
+    else
+        EffusionRaidAssist:ErrorMessage("A profile with that name already exists!")
+    end
+end
+
+function EffusionRaidAssistDataStorage:HasActiveProfile()
+    return self:GetCurrentProfile() ~= nil
 end
 
 function EffusionRaidAssistDataStorage:DeleteProfile(name)
-    if self.data:GetCurrentProfile() ~= name then
-        self.data:DeleteProfile(name)
+    if (name ~= self.defaultProfileName) then
+        if self:GetCurrentProfile() == name then
+            self:SetProfile(self.defaultProfileName)
+        end
+        self.data.profiles[name] = nil
     end
 end
 
 function EffusionRaidAssistDataStorage:GetCurrentProfile()
-    return self.data:GetCurrentProfile()
+    return self.data.characterProfiles[GetFullPlayerName()]
+end
+
+function EffusionRaidAssistDataStorage:RegisterDataCallback(path, callback)
+    if (self.dataCallbacks[path] == nil) then
+        self.dataCallbacks[path] = {}
+    end
+    table.insert(self.dataCallbacks[path], callback)
+end
+
+function EffusionRaidAssistDataStorage:DataChanged(path, value)
+    if (self.dataCallbacks[path] ~= nil) then
+        for _, callback in pairs(self.dataCallbacks[path]) do
+            callback(value)
+        end
+    end
 end
 
 function EffusionRaidAssistDataStorage:GetProfiles()
-    return self.data:GetProfiles()
+    return table.getkeys(self.data.profiles)
 end
 
 function EffusionRaidAssistDataStorage:CopyProfile(name)
-    self.data:CopyProfile(name, true)
+    self.data.profiles[self:GetCurrentProfile()] = table.deepcopy(self.data.profiles[name])
+    self:ProfileChanged()
 end
 
-function EffusionRaidAssistDataStorage:GetData()
-    return self.data.profile
+function EffusionRaidAssistDataStorage:ProfileExists(name)
+    return self.data.profiles[name] ~= nil
+end
+
+function EffusionRaidAssistDataStorage:GetData(path)
+    if (path) then
+        local splitPath = string.split(path, "%.")
+        local result = self:GetData()
+        for _, value in pairs(splitPath) do
+            if (result[value] ~= nil) then
+                result = result[value]
+            else
+                error("There is no data with the key: " .. path)
+                return nil
+            end
+        end
+        return result
+    end
+    return self.data.profiles[self:GetCurrentProfile()]
 end
 
 function EffusionRaidAssistDataStorage:GetCopyProfiles()
     local result = {}
-    for _, profile in pairs(EffusionRaidAssist.Storage:GetProfiles()) do
-        if (profile ~= EffusionRaidAssist.Storage:GetCurrentProfile()) then
+    for _, profile in pairs(self:GetProfiles()) do
+        if (profile ~= self:GetCurrentProfile()) then
             table.insert(result, profile)
         end
     end
     return result
+end
+
+function EffusionRaidAssistDataStorage:GetDeleteableProfiles()
+    local result = {}
+    for _, profile in pairs(self:GetProfiles()) do
+        if (profile ~= self.defaultProfileName) then
+            table.insert(result, profile)
+        end
+    end
+    return result
+end
+
+function EffusionRaidAssistDataStorage:ChangeData(path, value)
+    local splitPath = string.split(path, "%.")
+    local result = self:GetData()
+    local found = true
+    for i = 1, #splitPath - 1 do
+        local value = splitPath[i]
+        if (result[value] ~= nil and type(result[value]) == "table") then
+            result = result[value]
+        else
+            found = false
+            error("There is no data with the key: " .. path)
+            break
+        end
+    end
+    if (found) then
+        result[splitPath[#splitPath]] = value
+        self:DataChanged(path, value)
+    end
 end

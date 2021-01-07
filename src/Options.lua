@@ -104,8 +104,27 @@ function EffusionRaidAssistOptions:GetProfileTable()
 				end,
 				values = EffusionRaidAssist.Storage:GetCopyProfiles(),
 			},
-			resetprofile = {
+			deleteprofile = {
 				order = 4,
+				name = "Delete Profile",
+				width = "full",
+				desc = "Deletes a profile. Selects the default profile if current profile is deleted.",
+				type = "select",
+				set = function(_, value)
+					EffusionRaidAssist.Storage:DeleteProfile(EffusionRaidAssist.Storage:GetDeleteableProfiles()[value])
+				end,
+				values = EffusionRaidAssist.Storage:GetDeleteableProfiles(),
+			},
+			newprofile = {
+				order = 5,
+				name = "New Profile",
+				desc = "Creates a new profile with default values with the given name.",
+				type = "input",
+				set = function(_, name) EffusionRaidAssist.Storage:NewProfile(name) end,
+				width = "full",
+			},
+			resetprofile = {
+				order = 6,
 				name = "Reset current profile",
 				desc = "Resets the currently selected profile to default values.",
 				type = "execute",
