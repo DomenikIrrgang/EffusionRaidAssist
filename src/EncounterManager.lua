@@ -15,6 +15,7 @@ function EffusionRaidAssistEncounterManager:StartEncounter(id, name, difficulty,
     local encounter = EffusionRaidAssistEncounter(id, name, difficulty, size)
     self.activeEncounters[id] = encounter
     EffusionRaidAssist:ChatMessage(encounter.name, "(" .. encounter:GetDifficultyName() .. ", " .. encounter.size .. "-man) engaged! Good luck.")
+    EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.EncounterEngaged, encounter)
 end
 
 function EffusionRaidAssistEncounterManager:EndEncounter(id, _, _, _, result)
@@ -24,6 +25,7 @@ function EffusionRaidAssistEncounterManager:EndEncounter(id, _, _, _, result)
         EffusionRaidAssist:ChatMessage("Encounter against", encounter.name, "(" .. encounter:GetDifficultyName() .. ", " .. encounter.size .. "-man) ended after", string.format("%.2f", encounter:GetDuration()), " seconds.", "(" .. encounter:GetResultName() .. ")")
         self.activeEncounters[id] = nil
         self:ArchiveEncounter(encounter)
+        EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.EncounterDisengaged, encounter)
     end
 end
 
@@ -43,10 +45,6 @@ end
 --]]
 function EffusionRaidAssistEncounterManager:GetActiveEncounters()
     return self.activeEncounters
-end
-
-function EffusionRaidAssistEncounterManager:GetArchivedEncounters()
-    return EffusionRaidAssist.Storage:GetData().encounterHistory or {}
 end
 
 function EffusionRaidAssistEncounterManager:ArchiveEncounter(encounter)
