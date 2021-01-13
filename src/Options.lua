@@ -100,7 +100,7 @@ function EffusionRaidAssistOptions:GetProfileTable()
 					return "Profiles"
 				end,
 				set = function(_, value)
-					EffusionRaidAssist.Storage:CopyProfile(EffusionRaidAssist.Storage:GetProfiles()[value])
+					EffusionRaidAssist.Storage:CopyProfile(EffusionRaidAssist.Storage:GetCopyProfiles()[value])
 				end,
 				values = EffusionRaidAssist.Storage:GetCopyProfiles(),
 			},

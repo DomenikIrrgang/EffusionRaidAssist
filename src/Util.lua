@@ -138,6 +138,16 @@ function UnitIsInPlayersGroup(unit)
     return false
 end
 
+function GetUnitIdFromGUID(guid)
+    local guidValues = {}
+	local i = 1
+    for word in string.gmatch(guid, '([^-]+)') do
+        guidValues[i] = word
+        i = i + 1
+    end
+    return tonumber(guidValues[6])
+end
+
 string.split = function(s, p)
     local temp = {}
     local index = 0

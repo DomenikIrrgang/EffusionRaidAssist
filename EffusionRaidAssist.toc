@@ -18,6 +18,7 @@ src/DungeonManager.lua
 src/EncounterManager.lua
 src/CombatManager.lua
 src/GroupManager.lua
+src/NamePlateManager.lua
 src/Options.lua
 src/Storage.lua
 src/EffusionRaidAssist.lua

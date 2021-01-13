@@ -24,19 +24,9 @@ function EffusionRaidAssistCombatLogEvent.new()
         self.amount = amount
     end
 
-    self.sourceUnitId = self:GetUnitId(self.sourceGuid)
-    self.targetUnitId = self:GetUnitId(self.targetGuid)
+    self.sourceUnitId = GetUnitIdFromGUID(self.sourceGuid)
+    self.targetUnitId = GetUnitIdFromGUID(self.targetGuid)
     return self
-end
-
-function EffusionRaidAssistCombatLogEvent:GetUnitId(guid)
-    local guidValues = {}
-	local i = 1
-    for word in string.gmatch(guid, '([^-]+)') do
-        guidValues[i] = word
-        i = i + 1
-    end
-    return tonumber(guidValues[6])
 end
 
 function EffusionRaidAssistCombatLogEvent:IsTargetCreature()
