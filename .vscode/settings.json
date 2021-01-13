@@ -71,6 +71,8 @@
         "ceil",
         "BackdropTemplateMixin",
         "debugstack",
-        "UISpecialFrames"
+        "UISpecialFrames",
+        "UnitGUID",
+        "C_NamePlate"
     ]
 }

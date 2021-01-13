@@ -37,16 +37,6 @@ function EffusionRaidAssistCombatLogEventDispatcher:Clear()
     self.listeners = {}
 end
 
-function EffusionRaidAssistCombatLogEventDispatcher:DispatchEvent(event, data)
-    if self.listeners[event] ~= nil then
-        for _, eventCallback in pairs(self.listeners[event]) do
-            if (eventCallback.source["IsEnabled"] == nil or (eventCallback.source["IsEnabled"] ~= nil and eventCallback.source:IsEnabled())) then
-                eventCallback.callback(eventCallback.source, data)
-            end
-        end
-    end
-end
-
 function EffusionRaidAssistCombatLogEventDispatcher:COMBAT_LOG_EVENT_UNFILTERED()
     local combatLogEvent = EffusionRaidAssistCombatLogEvent()
     if (self.listeners[combatLogEvent.name] ~= nil) then
@@ -55,12 +45,16 @@ function EffusionRaidAssistCombatLogEventDispatcher:COMBAT_LOG_EVENT_UNFILTERED(
                 if ((eventListener.data.spellId == combatLogEvent.spellId or eventListener.data.spellId == nil) and
                     (eventListener.data.sourceUnitId == combatLogEvent.sourceUnitId or eventListener.data.sourceUnitId == nil) and
                     (eventListener.data.targetUnitId == combatLogEvent.targetUnitId or eventListener.data.targetUnitId == nil)) then
-                    self:DispatchEvent(combatLogEvent.name, combatLogEvent)
+                    if (eventListener.source["IsEnabled"] == nil or (eventListener.source["IsEnabled"] ~= nil and eventListener.source:IsEnabled())) then
+                        eventListener.callback(eventListener.source, combatLogEvent)
+                    end
                 end
             end
             if (combatLogEvent.name == "UNIT_DIED") then
                 if (eventListener.data.targetUnitId == combatLogEvent.targetUnitId or eventListener.data.targetUnitId == nil) then
-                    self:DispatchEvent(combatLogEvent.name, combatLogEvent)
+                    if (eventListener.source["IsEnabled"] == nil or (eventListener.source["IsEnabled"] ~= nil and eventListener.source:IsEnabled())) then
+                        eventListener.callback(eventListener.source, combatLogEvent)
+                    end
                 end
             end
         end

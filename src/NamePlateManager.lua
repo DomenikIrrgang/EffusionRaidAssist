@@ -19,12 +19,15 @@ end
 function EffusionRaidAssistNamePlateManager:NamePlateRemoved(unitId)
     local unit = UnitGUID(unitId)
     if (unit) then
-        self.units[guid] = nil
+        self.units[unit] = nil
     end
 end
 
 function EffusionRaidAssistNamePlateManager:GetNamePlate(guid)
-    return self.units[guid].namePlate
+    if (self.units[guid]) then
+        return self.units[guid].namePlate
+    end
+    return nil
 end
 
 function EffusionRaidAssistNamePlateManager:GetNamePlates()
