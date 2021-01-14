@@ -20,4 +20,6 @@ EffusionRaidAssist.CustomEvents = {
     UnitJoinedCombat = "UNIT_JOINED_COMBAT", -- (unitName, unitId, unitGuid)
     PlayerJoinedGroup = "PLAYER_JOINED_GROUP", -- (playerInfo = { name, level, class, isOnline, isDead, })
     PlayerLeftGroup = "PLAYER_LEFT_GROUP", -- (playerInfo = { name, level, class, isOnline, isDead, })
+    NamePlateAdded = "NAMEPLATE_ADDED", -- (unitId)
+    NamePlateRemoved = "NAMEPLATE_REMOVED", -- (unitId)
 }

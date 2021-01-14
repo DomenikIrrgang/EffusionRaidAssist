@@ -103,7 +103,9 @@ end
 function EffusionRaidAssistEventDispatcher:DispatchEvent(event, ...)
     if (self.enabled) then
         if (EffusionRaidAssist.MetaData.EventLogging) then
-            EffusionRaidAssist:DebugMessage(event, ...)
+            if (event ~= "COMBAT_LOG_EVENT_UNFILTERED") then
+                EffusionRaidAssist:DebugMessage(event, ...)
+            end
         end
         if self.listener[event] ~= nil then
             for _, value in pairs(self.listener[event]) do
