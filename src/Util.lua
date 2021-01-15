@@ -173,3 +173,16 @@ string.split = function(s, p)
 
     return temp
 end
+
+function UnitAuraByName(unitId, spellId)
+    for i = 1, 40 do
+        local name, _, _, _, _, _, _, _, _, id = UnitAura(unitId, i);
+        if (id == spellId) then
+            return UnitBuff(unitId, i)
+        end
+        if (name == nil) then
+            return nil
+        end
+    end
+    return nil
+end

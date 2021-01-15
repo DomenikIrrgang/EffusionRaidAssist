@@ -1,0 +1,6 @@
+package-as: EffusionRaidAssist
+enable-nolib-creation: no
+
+ignore:
+    - .vscode
+    - README.md
