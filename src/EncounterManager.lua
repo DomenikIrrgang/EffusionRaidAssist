@@ -14,6 +14,8 @@ end
 function EffusionRaidAssistEncounterManager:StartEncounter(id, name, difficulty, size)
     local encounter = EffusionRaidAssistEncounter(id, name, difficulty, size)
     self.activeEncounters[id] = encounter
+    print("ENCOUNTER_START", id, name, difficulty, size)
+    print("Encounter", encounter:GetDifficultyName(), encounter.id, encounter.name, encounter.difficulty, encounter.size)
     EffusionRaidAssist:ChatMessage(encounter.name, "(" .. encounter:GetDifficultyName() .. ", " .. encounter.size .. "-man) engaged! Good luck.")
     EffusionRaidAssist.EventDispatcher:DispatchEvent(EffusionRaidAssist.CustomEvents.EncounterEngaged, encounter)
 end
@@ -21,6 +23,8 @@ end
 function EffusionRaidAssistEncounterManager:EndEncounter(id, _, _, _, result)
     local encounter = self.activeEncounters[id]
     if (encounter) then
+        print("ENCOUNTER_END", id, result)
+        print("Encounter", encounter:GetDifficultyName(), encounter.id, encounter.name, encounter.difficulty, encounter.size)
         encounter:End(result)
         EffusionRaidAssist:ChatMessage("Encounter against", encounter.name, "(" .. encounter:GetDifficultyName() .. ", " .. encounter.size .. "-man) ended after", string.format("%.2f", encounter:GetDuration()), " seconds.", "(" .. encounter:GetResultName() .. ")")
         self.activeEncounters[id] = nil

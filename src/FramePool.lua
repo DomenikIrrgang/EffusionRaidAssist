@@ -40,7 +40,7 @@ function EffusionRaidAssistFramePool:CreateFrame(type)
     if (self:IsCustomType(type)) then
         frame = self.customFrames[type](type .. #self.createdFrames[type], UIParent)
     else
-        frame = CreateFrame(type, type .. #self.createdFrames[type], UIParent, "BackdropTemplate")
+        frame = CreateFrame(type, type .. #self.createdFrames[type], UIParent)
     end
     table.insert(self.createdFrames[type], frame)
     EffusionRaidAssist:DebugMessage("Frame Created: ", frame:GetName())

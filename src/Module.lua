@@ -101,7 +101,7 @@ function EffusionRaidAssistModule:GetOptionsTable()
                     self:SetEnabled(value)
                 end,
             },
-            remove = {
+            --[[remove = {
                 order = 99,
                 type = "execute",
                 name = "Remove Module",
@@ -109,7 +109,7 @@ function EffusionRaidAssistModule:GetOptionsTable()
                     EffusionRaidAssist.ModuleManager:UnloadModule(self)
                 end,
                 width = "full",
-            }
+            }--]]
         }
     }
     if (self.GetOptions) then

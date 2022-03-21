@@ -118,7 +118,7 @@ function EffusionRaidAssistDataStorage:GetData(path)
             if (result[value] ~= nil) then
                 result = result[value]
             else
-                error("There is no data with the key: " .. path)
+                error("There is no data with the key: '" .. value  .. "' for path: " .. path)
                 return nil
             end
         end
