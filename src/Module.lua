@@ -33,6 +33,11 @@ end
 
 function EffusionRaidAssistModule:GetData(name)
     local path = "modules." .. self.name
+
+    if (EffusionRaidAssist.Storage:HasData(path) == nil) then
+        EffusionRaidAssist.Storage:ChangeData(path, self:GetDefaultOptions())
+    end
+
     if (name) then
         path = path .. "." .. name
     end

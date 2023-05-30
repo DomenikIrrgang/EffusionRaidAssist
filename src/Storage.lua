@@ -110,6 +110,19 @@ function EffusionRaidAssistDataStorage:ProfileExists(name)
     return self.data.profiles[name] ~= nil
 end
 
+function EffusionRaidAssistDataStorage:HasData(path)
+    local splitPath = string.split(path, "%.")
+    local result = self:GetData()
+    for _, value in pairs(splitPath) do
+        if (result[value] ~= nil) then
+            result = result[value]
+        else
+            return nil
+        end
+    end
+    return true
+end
+
 function EffusionRaidAssistDataStorage:GetData(path)
     if (path) then
         local splitPath = string.split(path, "%.")

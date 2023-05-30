@@ -12,6 +12,7 @@ function EffusionRaidAssistMainWindow:OnModuleInitialize()
     if (table.getn(self:GetModulesWithUserinterface()) > 0) then
         self.moduleSelection:SetGroup(self:GetModulesWithUserinterface()[1].name)
     end
+    EffusionRaidAssist:DebugMessage(self.window)
 end
 
 function EffusionRaidAssistMainWindow:CreateWindow(title)

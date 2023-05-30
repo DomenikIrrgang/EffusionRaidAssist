@@ -45,10 +45,10 @@ end
 
 EffusionRaidAssist.MetaData = {
     Version = "0.1",
-    Date = "12/15/2020",
-    Authors = "Suu, Gamko",
+    Date = "28/05/2023",
+    Authors = "Suu",
     Color = "|c0000FF00",
-    Mode = "Release",
+    Mode = "Debug",
     EventLogging = false,
     AddonName = "EffusionRaidAssist"
 }
