@@ -27,8 +27,32 @@ end
 
 function EffusionRaidAssistDataStorage:Init()
     self.data = self:LoadData()
+    self:MigrateModuleData()
     if (not self:HasActiveProfile()) then
         self:SetProfile(self.defaultProfileName)
+    end
+end
+
+function EffusionRaidAssistDataStorage:MigrateModuleData()
+    for _, module in pairs(EffusionRaidAssist.ModuleManager:GetModules()) do
+        for key, value in pairs(module:GetDefaultOptions()) do
+            self:MigrateModuleDataKey(key, value, self:GetData().modules[module.name], self:GetData().modules[module.name][key])
+        end
+    end
+end
+
+function EffusionRaidAssistDataStorage:MigrateModuleDataKey(moduleKey, moduleValue, storageParent, storageValue)
+    if (type(moduleValue) == "table") then
+        if (storageValue == nil) then
+            storageParent[moduleKey] = {}
+        end
+        for tableKey, tableValue in pairs(moduleValue) do
+            self:MigrateModuleDataKey(tableKey, tableValue, storageParent[moduleKey], storageParent[moduleKey][tableKey])
+        end
+    else
+        if (storageValue == nil) then
+            storageParent[moduleKey] = moduleValue
+        end
     end
 end
 
